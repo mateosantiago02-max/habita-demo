@@ -1,0 +1,39 @@
+/* Habitá · identidad "Ochava" */
+:root {
+  --monte: #34402B;
+  --monte-2: #4A5A3C;
+  --oliva: #8E9A3B;
+  --oliva-2: #5C661E;
+  --oliva-soft: #E7EAD2;
+  --rio: #4F7F84;
+  --rio-2: #3B6469;
+  --rio-soft: #DDE8E8;
+  --maqueta: #F4F3EF;
+  --maqueta-2: #EAE9E3;
+  --calle: #C8CEC4;
+  --blanco: #FFFFFF;
+  --tinta: #1E2321;
+  --tinta-2: #535A55;
+  --tinta-3: #5F655F;
+  --linea: rgba(30, 35, 33, .12);
+  --linea-2: rgba(30, 35, 33, .24);
+
+  /* alias usados por la app */
+  --salvia: var(--monte); --salvia-2: var(--monte-2); --salvia-soft: var(--oliva-soft);
+  --terracota: var(--oliva-2); --terracota-dark: var(--oliva-2); --terracota-soft: var(--oliva-soft);
+  --arena: var(--maqueta-2); --arena-2: var(--calle); --papel: var(--maqueta);
+  --pizarra: var(--tinta); --pizarra-2: var(--tinta-2); --pizarra-3: var(--tinta-3);
+  --ladrillo: var(--oliva-2); --ladrillo-soft: var(--oliva-soft); --cielo: var(--rio); --cielo-2: var(--rio-2); --cielo-soft: var(--rio-soft);
+
+  --display: 'Schibsted Grotesk', system-ui, sans-serif;
+  --texto: 'Schibsted Grotesk', system-ui, sans-serif;
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --r-sm: 8px; --r-md: 14px; --r-lg: 20px; --r-xl: 28px;
+  --lm-bg: var(--monte); --lm-fg: var(--maqueta); --lm-roof: var(--oliva);
+}
+
+/* Logo · la "a" con techito */
+.wordmark { font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 800; letter-spacing: -.055em; font-size: 26px; line-height: 1; color: var(--tinta); white-space: nowrap; }
+.wordmark .wm-a { position: relative; display: inline-block; }
+.wordmark .wm-a svg { position: absolute; left: 50%; top: .02em; width: .6em; height: .3em; transform: translateX(-47%); overflow: visible; fill: none; stroke: var(--lm-roof); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.logo-mark { width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; }

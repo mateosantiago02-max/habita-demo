@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="es-UY">
+<head>
+<script>if (location.search.includes("embed")) document.documentElement.classList.add("embed");</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Habitá · App del propietario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  :root {
+    --brand: var(--salvia); --brand-soft: var(--salvia-soft); --paper: var(--blanco); --paper-2: var(--arena); --card: #fff;
+    --ink: var(--tinta); --ink-2: var(--tinta-2); --ink-3: var(--tinta-3); --line: rgba(30,31,28,.1); --wood: var(--terracota); --wood-soft: var(--terracota-soft);
+    --serif: var(--display); --sans: var(--texto); --mono: var(--texto);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: var(--sans); color: var(--ink); background: var(--stage, #e6dfd3); min-height: 100vh; display: flex; align-items: center; justify-content: center; gap: 88px; padding: 32px; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 700; letter-spacing: -.045em; line-height: 1; }
+  em { font-style: normal; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { background: none; border: 0; cursor: pointer; }
+  svg.i { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  :focus-visible { outline: 2px solid var(--wood); outline-offset: 2px; border-radius: 6px; }
+  .label { font-family: var(--mono); font-weight: 600; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+
+  /* Presentación */
+  .intro { max-width: 360px; }
+  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 40px; }
+  .intro h1 { font-size: 48px; margin: 14px 0 16px; }
+  .intro h1 em { color: var(--wood); }
+  .intro p { color: var(--ink-2); line-height: 1.6; margin-bottom: 28px; }
+  .jump { display: grid; border-top: 1px solid rgba(27,28,25,.18); }
+  .jump button { display: grid; grid-template-columns: 34px 1fr auto; align-items: center; text-align: left; padding: 13px 4px; border-bottom: 1px solid rgba(27,28,25,.12); font-size: 15px; transition: padding .3s, color .2s; color: var(--ink-2); }
+  .jump button span { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+  .jump button svg.i { width: 16px; height: 16px; opacity: 0; transition: opacity .2s, transform .3s; }
+  .jump button:hover, .jump button.on { color: var(--ink); padding-left: 10px; }
+  .jump button.on svg.i, .jump button:hover svg.i { opacity: 1; }
+
+  .device { width: 380px; height: 790px; border-radius: 58px; padding: 12px; background: #161714; box-shadow: inset 0 0 0 1.5px #3a3b36, 0 60px 100px -36px rgba(30,20,10,.55); position: relative; flex-shrink: 0; }
+  .device::before { content: ''; position: absolute; top: 24px; left: 50%; transform: translateX(-50%); width: 104px; height: 30px; border-radius: 20px; background: #000; z-index: 30; }
+  .screen { width: 100%; height: 100%; border-radius: 46px; overflow: hidden; background: var(--paper); position: relative; display: flex; flex-direction: column; isolation: isolate; }
+
+  body.embed { background: var(--paper); padding: 0; display: block; }
+  body.embed .intro { display: none; }
+  body.embed .device { width: 100%; height: 100vh; border-radius: 0; padding: 0; background: none; box-shadow: none; }
+  body.embed .device::before { display: none; }
+  body.embed .screen { border-radius: 0; }
+
+  .status { height: 52px; flex-shrink: 0; display: flex; justify-content: space-between; align-items: flex-end; padding: 0 30px 7px 34px; font-size: 14px; font-weight: 600; position: relative; z-index: 5; }
+  .status svg { height: 12px; }
+  .views { flex: 1; position: relative; overflow: hidden; }
+  .view { position: absolute; inset: 0; overflow-y: auto; padding: 6px 20px 28px; display: none; scrollbar-width: none; }
+  .view::-webkit-scrollbar { display: none; }
+  .view.on { display: block; }
+
+  .top { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .tenant { width: 30px; height: 30px; border-radius: 9px; background: var(--ink); color: var(--paper); display: grid; place-items: center; font-family: var(--serif); font-size: 17px; }
+  .top-t { font-size: 13px; line-height: 1.25; }
+  .top-t small { display: block; color: var(--ink-3); font-size: 11.5px; }
+  .avatar { margin-left: auto; width: 36px; height: 36px; border-radius: 50%; background: var(--paper-2); display: grid; place-items: center; font-size: 13px; font-weight: 500; }
+  .icon-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--card); box-shadow: 0 0 0 1px var(--line); position: relative; }
+  .icon-btn .badge { position: absolute; top: 7px; right: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--wood); box-shadow: 0 0 0 2px var(--card); }
+  .title { font-size: 32px; margin-bottom: 4px; }
+  .title em { color: var(--wood); }
+  .sub { color: var(--ink-2); font-size: 13.5px; margin-bottom: 18px; line-height: 1.5; }
+
+  .home-card { position: relative; height: 196px; border-radius: 22px; overflow: hidden; margin-bottom: 14px; }
+  .home-card img { width: 100%; height: 100%; object-fit: cover; }
+  .home-card .cap { position: absolute; inset: auto 0 0; padding: 16px 18px; color: #fff; background: linear-gradient(0deg, rgba(20,24,22,.78), rgba(20,24,22,0)); }
+  .home-card .cap b { display: block; font-family: var(--serif); font-weight: 700; font-size: 23px; letter-spacing: -.01em; }
+  .home-card .cap span { font-size: 12px; opacity: .85; }
+  .home-card .chip { position: absolute; top: 14px; left: 14px; background: var(--chip-glass, rgba(243,238,230,.92)); color: var(--ink); }
+
+  .chip { display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 9px; border-radius: 999px; font-size: 11.5px; font-weight: 500; background: var(--brand-soft); color: var(--brand); white-space: nowrap; }
+  .chip.warn { background: var(--wood-soft); color: var(--wood); }
+  .chip.plain { background: var(--paper-2); color: var(--ink-2); }
+
+  .alert { display: flex; gap: 12px; align-items: center; padding: 14px; border-radius: 18px; background: var(--wood-soft); margin-bottom: 4px; }
+  .alert .ico { background: var(--wood); color: #fff; }
+  .alert b { display: block; font-size: 14px; font-weight: 500; }
+  .alert span { font-size: 12.5px; color: var(--ink-2); }
+
+  .sec { display: flex; justify-content: space-between; align-items: baseline; margin: 22px 0 10px; }
+  .sec h3 { font-size: 20px; }
+  .sec button { font-size: 12.5px; color: var(--brand); font-weight: 500; }
+
+  .card { display: flex; align-items: center; gap: 12px; padding: 13px; background: var(--card); border-radius: 16px; box-shadow: 0 0 0 1px var(--line); margin-bottom: 8px; width: 100%; text-align: left; }
+  .ico { width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; display: grid; place-items: center; background: var(--paper-2); color: var(--ink); }
+  .ico svg.i { width: 19px; height: 19px; }
+  .card .t { flex: 1; min-width: 0; }
+  .card .t b { display: block; font-size: 14px; font-weight: 500; line-height: 1.3; }
+  .card .t small { font-size: 12px; color: var(--ink-3); }
+  .chev { color: var(--ink-3); width: 16px !important; height: 16px !important; }
+
+  .tip { padding: 16px; border-radius: 18px; background: var(--brand); color: var(--paper); }
+  .tip .label { color: rgba(243,238,230,.55); }
+  .tip p { font-family: var(--serif); font-size: 19px; line-height: 1.3; margin-top: 8px; }
+
+  .quick { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .quick button { display: grid; justify-items: center; gap: 7px; padding: 12px 4px; border-radius: 16px; background: var(--card); box-shadow: 0 0 0 1px var(--line); font-size: 11.5px; color: var(--ink-2); }
+  .quick button svg.i { color: var(--ink); }
+
+  .rooms { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .room { position: relative; height: 138px; border-radius: 18px; overflow: hidden; text-align: left; }
+  .room img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s cubic-bezier(.22,1,.36,1); } .room:active img { transform: scale(1.04); } .room.noimg { background: var(--oliva-soft); color: var(--monte); display: grid; place-items: center; } .room.noimg > svg.i { width: 30px; height: 30px; margin-bottom: 34px; }
+  .room:active svg.iso { transform: scale(.97); }
+  .room div { position: absolute; inset: auto 0 0; padding: 18px 12px 10px; color: #fff; background: linear-gradient(0deg, rgba(20,24,22,.75), rgba(20,24,22,0)); } .room.noimg div { color: var(--ink); background: none; }
+  .room b { display: block; font-size: 14px; font-weight: 500; }
+  .room small { font-size: 11px; color: var(--ink-3); }
+  .room.noimg { background: var(--brand-soft); color: var(--brand); display: grid; place-items: center; }
+  .room.noimg svg.i { width: 30px; height: 30px; stroke-width: 1.2; margin-bottom: 30px; }
+  .room.noimg div { background: none; color: var(--ink); }
+  .search { display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 14px; border-radius: 14px; background: var(--card); box-shadow: 0 0 0 1px var(--line); color: var(--ink-3); font-size: 14px; margin-bottom: 16px; }
+
+  .back { display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 12px 0 8px; border-radius: 999px; background: var(--card); box-shadow: 0 0 0 1px var(--line); font-size: 13px; font-weight: 500; margin-bottom: 14px; }
+  .hero-img { height: 210px; border-radius: 22px; overflow: hidden; margin-bottom: 16px; background: var(--oliva-soft); } .hero-img img { width: 100%; height: 100%; object-fit: cover; }
+  .seg { display: flex; padding: 3px; background: var(--paper-2); border-radius: 12px; margin-bottom: 14px; position: relative; }
+  .seg button { flex: 1; height: 34px; border-radius: 9px; font-size: 13px; color: var(--ink-2); position: relative; z-index: 1; transition: color .2s; }
+  .seg button.on { color: var(--ink); }
+  .seg .pill { position: absolute; top: 3px; bottom: 3px; left: 3px; border-radius: 9px; background: var(--card); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  .el { background: var(--card); border-radius: 16px; box-shadow: 0 0 0 1px var(--line); margin-bottom: 8px; overflow: hidden; }
+  .el-h { display: flex; align-items: center; gap: 10px; width: 100%; padding: 14px; text-align: left; }
+  .el-h b { flex: 1; font-size: 14.5px; font-weight: 500; }
+  .el-h .chev { transition: transform .35s cubic-bezier(.22,1,.36,1); transform: rotate(90deg); }
+  .el.open .el-h .chev { transform: rotate(-90deg); }
+  .el-body { height: 0; overflow: hidden; }
+  .el-in { padding: 0 14px 14px; }
+  .el-in p { font-size: 13px; color: var(--ink-2); line-height: 1.55; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .meta span { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; padding: 5px 9px; border-radius: 8px; background: var(--paper-2); color: var(--ink-2); }
+  .meta svg.i { width: 13px; height: 13px; }
+  .do { list-style: none; display: grid; gap: 8px; }
+  .do li { display: flex; gap: 10px; font-size: 13.5px; line-height: 1.45; padding: 12px 14px; background: var(--card); border-radius: 14px; box-shadow: 0 0 0 1px var(--line); }
+  .do li svg.i { width: 16px; height: 16px; color: var(--brand); margin-top: 2px; }
+
+  .week { display: flex; justify-content: space-between; padding: 10px 8px; background: var(--card); border-radius: 18px; box-shadow: 0 0 0 1px var(--line); margin-bottom: 8px; }
+  .week div { width: 40px; text-align: center; font-size: 11px; color: var(--ink-3); display: grid; gap: 4px; justify-items: center; }
+  .week b { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; font-size: 15px; font-weight: 500; color: var(--ink); position: relative; }
+  .week .today b { background: var(--ink); color: var(--paper); }
+  .week .dot b::after { content: ''; position: absolute; bottom: 3px; width: 4px; height: 4px; border-radius: 50%; background: var(--wood); }
+  .month { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin: 18px 0 8px; }
+  .task .check { width: 26px; height: 26px; flex-shrink: 0; border-radius: 50%; box-shadow: inset 0 0 0 1.5px #cdc5b8; display: grid; place-items: center; color: #fff; transition: background .25s, box-shadow .25s; }
+  .task .check svg.i { width: 14px; height: 14px; stroke-width: 2.2; opacity: 0; }
+  .task.done .check { background: var(--brand); box-shadow: none; }
+  .task.done .check svg.i { opacity: 1; }
+  .task.done .t b { color: var(--ink-3); text-decoration: line-through; text-decoration-color: rgba(0,0,0,.25); }
+
+  .w-sum { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+  .w-sum div { padding: 12px; border-radius: 16px; background: var(--card); box-shadow: 0 0 0 1px var(--line); }
+  .w-sum b { display: block; font-family: var(--serif); font-weight: 700; font-size: 28px; line-height: 1.1; }
+  .w-sum span { font-size: 11px; color: var(--ink-3); }
+  .w-sum .warn b { color: var(--wood); }
+  .wi { padding: 14px; border-radius: 16px; background: var(--card); box-shadow: 0 0 0 1px var(--line); margin-bottom: 8px; }
+  .wi-h { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .wi-h b { font-size: 14px; font-weight: 500; }
+  .wi p { font-size: 12px; color: var(--ink-3); margin-top: 3px; }
+  .bar { height: 4px; border-radius: 4px; background: var(--paper-2); margin-top: 11px; overflow: hidden; }
+  .bar i { display: block; height: 100%; border-radius: 4px; background: var(--brand); transform-origin: 0 50%; }
+  .bar i.warn { background: var(--wood); }
+  .decenal { padding: 16px; border-radius: 18px; background: var(--brand); color: var(--paper); margin-top: 6px; }
+  .decenal .label { color: rgba(243,238,230,.55); }
+  .decenal b { display: block; font-family: var(--serif); font-weight: 700; font-size: 21px; margin: 6px 0 4px; }
+  .decenal p { font-size: 12.5px; color: rgba(243,238,230,.7); line-height: 1.5; }
+
+  .photo { position: relative; display: grid; place-items: center; width: 100%; height: 190px; border-radius: 20px; background: var(--card); box-shadow: inset 0 0 0 1.5px #d5cdbf; color: var(--ink-3); font-size: 13px; overflow: hidden; margin-bottom: 6px; }
+  .photo .in { display: grid; justify-items: center; gap: 8px; }
+  .photo .in .ico { background: var(--ink); color: var(--paper); width: 48px; height: 48px; border-radius: 50%; }
+  .photo .shot { position: absolute; inset: 0; } .photo .shot img { width: 100%; height: 100%; object-fit: cover; object-position: 30% 78%; } .photo .shot .chip { position: absolute; left: 10px; bottom: 10px; }
+  .photo .flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+  .photo .retake { position: absolute; right: 10px; bottom: 10px; z-index: 2; }
+  label { display: block; font-size: 12px; font-weight: 500; color: var(--ink-2); margin: 14px 0 6px; }
+  select, textarea { width: 100%; padding: 12px 14px; border-radius: 14px; border: 0; background: var(--card); box-shadow: 0 0 0 1px var(--line); font-size: 14px; appearance: none; }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%238a897f' stroke-width='1.5'%3E%3Cpath d='M2 4.5 6 8l4-3.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+  textarea { height: 84px; resize: none; line-height: 1.45; }
+  .primary { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 52px; margin-top: 18px; border-radius: 16px; background: var(--ink); color: var(--paper); font-size: 15px; font-weight: 500; }
+  .primary.brand { background: var(--brand); }
+
+  .ok { text-align: center; padding-top: 40px; }
+  .ok-ring { width: 92px; height: 92px; margin: 0 auto 22px; }
+  .ok-ring circle { fill: none; stroke: var(--brand); stroke-width: 2; }
+  .ok-ring path { fill: none; stroke: var(--brand); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .ok h2 { font-size: 30px; margin-bottom: 8px; }
+  .ok > p { color: var(--ink-2); font-size: 14px; line-height: 1.5; max-width: 280px; margin: 0 auto; }
+  .tl { text-align: left; margin-top: 28px; position: relative; padding-left: 30px; }
+  .tl::before { content: ''; position: absolute; left: 9px; top: 10px; bottom: 26px; width: 1.5px; background: var(--line); }
+  .tl div { position: relative; padding: 0 0 18px; }
+  .tl div::before { content: ''; position: absolute; left: -26px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--paper); box-shadow: inset 0 0 0 1.5px #cdc5b8; }
+  .tl div.done::before { background: var(--brand); box-shadow: none; }
+  .tl div.now::before { background: var(--wood); box-shadow: 0 0 0 4px var(--wood-soft); }
+  .tl b { display: block; font-size: 14px; font-weight: 500; }
+  .tl small { font-size: 12px; color: var(--ink-3); }
+
+  #v-login { padding: 0; }
+  .login-img { height: 360px; position: relative; }
+  .login-img img { width: 100%; height: 100%; object-fit: cover; }
+  .login-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, var(--paper) 3%, rgba(244,243,239,0) 45%); }
+  .login-body { padding: 0 24px; margin-top: -54px; position: relative; }
+  .login-body .top { margin-bottom: 18px; }
+  .login-body h1 { font-size: 34px; margin-bottom: 10px; }
+  .login-body h1 em { color: var(--wood); }
+  .login-body > p { color: var(--ink-2); font-size: 14px; line-height: 1.55; }
+  .code { display: grid; grid-template-columns: repeat(6, 1fr); gap: 7px; margin-top: 20px; }
+  .code span { height: 52px; border-radius: 13px; background: var(--card); box-shadow: 0 0 0 1px var(--line); display: grid; place-items: center; font-family: var(--mono); font-size: 20px; }
+  .fine { font-size: 11.5px; color: var(--ink-3); text-align: center; margin-top: 14px; }
+
+  .tabbar { flex-shrink: 0; position: relative; display: grid; grid-template-columns: repeat(5, 1fr); padding: 8px 10px 26px; background: var(--bar-glass, rgba(251,249,245,.94)); backdrop-filter: blur(12px); border-top: 1px solid var(--line); z-index: 5; }
+  .tabbar button { position: relative; z-index: 1; display: grid; justify-items: center; gap: 3px; padding: 6px 0; font-size: 11px; font-weight: 500; color: var(--ink-3); transition: color .2s; }
+  .tabbar button.on { color: var(--ink); }
+  .tabbar .t-ind { position: absolute; top: 8px; height: 48px; border-radius: 14px; background: var(--paper-2); }
+  .tabbar.hide { display: none; }
+
+  .scrim { position: absolute; inset: 0; background: rgba(15,15,12,.45); opacity: 0; pointer-events: none; z-index: 20; }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; z-index: 21; background: var(--paper); border-radius: 28px 28px 0 0; padding: 10px 20px 34px; transform: translateY(105%); }
+  .sheet-close { position: absolute; top: 12px; right: 14px; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--paper-2); transform: rotate(-90deg); }
+  .sheet .grab { width: 38px; height: 4px; border-radius: 4px; background: #cfc7ba; margin: 0 auto 16px; }
+  .sheet h3 { font-size: 26px; margin-bottom: 4px; }
+  .em { display: grid; gap: 8px; margin-top: 14px; }
+  .em div { display: flex; gap: 12px; padding: 12px; border-radius: 16px; background: var(--card); box-shadow: 0 0 0 1px var(--line); }
+  .em b { display: block; font-size: 14px; font-weight: 500; }
+  .em span { font-size: 12.5px; color: var(--ink-2); line-height: 1.45; }
+  .call { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .call a { display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border-radius: 14px; background: var(--ink); color: var(--paper); font-size: 14px; font-weight: 500; text-decoration: none; }
+  .call a + a { background: var(--card); color: var(--ink); box-shadow: 0 0 0 1px var(--line); }
+
+  @media (max-width: 900px) {
+    body:not(.embed) { padding: 0; display: block; }
+    body:not(.embed) .intro { display: none; }
+    body:not(.embed) .device { width: 100%; height: 100dvh; border-radius: 0; padding: 0; background: none; box-shadow: none; }
+    body:not(.embed) .device::before { display: none; }
+    body:not(.embed) .screen { border-radius: 0; }
+  }
+  /* Modo oscuro (la app; el teléfono dentro de la web acompaña al sistema solo si se abre aparte) */
+  @media (prefers-color-scheme: dark) {
+    html:not(.embed) {
+      --paper: #121512; --paper-2: #1C211C; --card: #222823; --line: rgba(236,239,232,.12);
+      --ink: #ECEFE8; --ink-2: #B9C0B6; --ink-3: #9AA297;
+      --brand: #C3CC72; --brand-soft: #2D3523; --wood: #C3CC72; --wood-soft: #333A1F;
+      --stage: #0B0D0B; --chip-glass: rgba(18,21,18,.82); --bar-glass: rgba(22,26,22,.92);
+      --lm-bg: #2D3523; --lm-fg: #ECEFE8;
+      color-scheme: dark;
+    }
+    html:not(.embed) .primary { color: #121512; }
+    html:not(.embed) .tip, html:not(.embed) .decenal { color: #121512; }
+    html:not(.embed) .tip .label, html:not(.embed) .decenal .label, html:not(.embed) .decenal p { color: rgba(18,21,18,.7); }
+    html:not(.embed) .wordmark { color: var(--ink); }
+    html:not(.embed) .scrim { background: rgba(0,0,0,.6); }
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="var(--lm-bg)"/><text x="16" y="25" text-anchor="middle" font-family="Schibsted Grotesk" font-weight="800" font-size="21" fill="var(--lm-fg)">a</text><path d="M10.8 10.6 16 6l5.2 4.6" fill="none" stroke="var(--lm-roof)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="home" viewBox="0 0 24 24"><path d="M3.5 10.5 12 3.5l8.5 7V20a.5.5 0 0 1-.5.5h-5v-6h-6v6H4a.5.5 0 0 1-.5-.5z"/></symbol>
+  <symbol id="book" viewBox="0 0 24 24"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v15H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h14"/></symbol>
+  <symbol id="calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v6c0 4.5 3.2 7.8 7.5 9 4.3-1.2 7.5-4.5 7.5-9V6z"/></symbol>
+  <symbol id="camera" viewBox="0 0 24 24"><path d="M4 7.5h3l2-2.5h6l2 2.5h3a1 1 0 0 1 1 1V19a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8.5a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.2" r="3.4"/></symbol>
+  <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="chev" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="back" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
+  <symbol id="check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="bell" viewBox="0 0 24 24"><path d="M6 8.5a6 6 0 0 1 12 0c0 6.5 2.5 8.5 2.5 8.5h-17S6 15 6 8.5"/><path d="M10.3 20.5a1.9 1.9 0 0 0 3.4 0"/></symbol>
+  <symbol id="search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></symbol>
+  <symbol id="drop" viewBox="0 0 24 24"><path d="M12 3.5s6 6.4 6 10.5a6 6 0 0 1-12 0c0-4.1 6-10.5 6-10.5z"/></symbol>
+  <symbol id="wind" viewBox="0 0 24 24"><path d="M3 8h10.5a2.5 2.5 0 1 0-2.5-2.5M3 12h15.5a2.5 2.5 0 1 1-2.5 2.5M3 16h7"/></symbol>
+  <symbol id="zap" viewBox="0 0 24 24"><path d="M13 2.5 4.5 13.5H12l-1 8 8.5-11H12z"/></symbol>
+  <symbol id="flame" viewBox="0 0 24 24"><path d="M12 21a6.5 6.5 0 0 0 6.5-6.5c0-4.5-4-6.5-4.5-11-2.5 2-4 4-4 6.5-1-1-1.5-2-1.5-3C6.5 9 5.5 11.5 5.5 14.5A6.5 6.5 0 0 0 12 21z"/></symbol>
+  <symbol id="plan" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="1"/><path d="M3.5 12h7v8.5M10.5 3.5V8M14 12h6.5"/></symbol>
+  <symbol id="phone" viewBox="0 0 24 24"><path d="M5 3.5h3.5l1.5 4.5-2.2 1.4a11 11 0 0 0 6.8 6.8L16 14l4.5 1.5V19a1.5 1.5 0 0 1-1.5 1.5A16 16 0 0 1 3.5 5 1.5 1.5 0 0 1 5 3.5z"/></symbol>
+  <symbol id="alert" viewBox="0 0 24 24"><path d="M12 9v4.5M12 17h.01"/><path d="M10.3 3.9 2.3 18a2 2 0 0 0 1.7 3h16a2 2 0 0 0 1.7-3l-8-14.1a2 2 0 0 0-3.4 0z"/></symbol>
+  <symbol id="building" viewBox="0 0 24 24"><rect x="4.5" y="3" width="15" height="18" rx="1"/><path d="M9.5 21v-4h5v4M8.5 7h2M13.5 7h2M8.5 11h2M13.5 11h2"/></symbol>
+  <symbol id="tool" viewBox="0 0 24 24"><path d="M14.5 6.5a4 4 0 0 0-5.3 5.3L3.5 17.5l3 3 5.7-5.7a4 4 0 0 0 5.3-5.3l-2.4 2.4-2.3-.6-.6-2.3z"/></symbol>
+  <symbol id="tag" viewBox="0 0 24 24"><path d="M3.5 12.5V4a.5.5 0 0 1 .5-.5h8.5l8 8-9 9z"/><circle cx="8" cy="8" r="1.2"/></symbol>
+  <symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="send" viewBox="0 0 24 24"><path d="M20.5 3.5 10 14M20.5 3.5 14 20.5l-4-6.5-6.5-4z"/></symbol>
+</svg>
+
+<div class="intro">
+  <div class="brand"><span class="wordmark">habit<span class="wm-a">a<svg viewBox="0 0 20 11"><path d="M2 9.5 10 2.5l8 7"/></svg></span></span></div>
+  <p class="label">Prototipo navegable</p>
+  <h1>La app del <em>propietario</em></h1>
+  <p>Lo que ve quien recibe su vivienda: el manual con la marca de la empresa, sin contraseña y sin costo para el propietario.</p>
+  <div class="jump">
+    <button data-go="login"><span>01</span>Ingreso por invitación<svg class="i"><use href="#arrow"/></svg></button>
+    <button data-go="home"><span>02</span>Inicio<svg class="i"><use href="#arrow"/></svg></button>
+    <button data-go="manual"><span>03</span>Manual por ambiente<svg class="i"><use href="#arrow"/></svg></button>
+    <button data-go="agenda"><span>04</span>Mantenimiento<svg class="i"><use href="#arrow"/></svg></button>
+    <button data-go="garantias"><span>05</span>Garantías<svg class="i"><use href="#arrow"/></svg></button>
+    <button data-go="reportes"><span>06</span>Reportes<svg class="i"><use href="#arrow"/></svg></button>
+  </div>
+</div>
+
+<div class="device">
+  <div class="screen">
+    <div class="status"><span>9:41</span><svg viewBox="0 0 62 12" aria-hidden="true"><g fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/><rect x="36" y=".5" width="22" height="11" rx="3" fill="none" stroke="currentColor" opacity=".45"/><rect x="38" y="2.5" width="16" height="7" rx="1.5"/><rect x="59" y="4" width="2" height="4" rx="1" opacity=".45"/></g></svg></div>
+
+    <div class="views">
+      <!-- LOGIN -->
+      <section class="view" id="v-login">
+        <div class="login-img"><img src="assets/img/fachada-esquina.webp" alt="" style="object-position:50% 30%"></div>
+        <div class="login-body">
+          <div class="top"><span class="tenant">E</span><div class="top-t">Logo de tu empresa<small>con Habitá</small></div></div>
+          <h1>Te damos la bienvenida <em>a tu casa.</em></h1>
+          <p>La empresa que construyó tu vivienda te invitó a su manual. Ingresá el código que te llegó por WhatsApp.</p>
+          <div class="code" aria-label="Código de invitación"><span>4</span><span>8</span><span>2</span><span>7</span><span>1</span><span>5</span></div>
+          <button class="primary brand" data-go="home">Entrar a mi vivienda <svg class="i"><use href="#arrow"/></svg></button>
+          <p class="fine">No necesitás contraseña. También podés entrar desde el enlace que te llegó por email.</p>
+        </div>
+      </section>
+
+      <!-- INICIO -->
+      <section class="view" id="v-home">
+        <div class="top"><span class="tenant">E</span><div class="top-t">Tu empresa<small>Tu edificio</small></div><button class="icon-btn" aria-label="Avisos" style="margin-left:auto"><svg class="i"><use href="#bell"/></svg><span class="badge"></span></button><span class="avatar" style="margin-left:0" aria-label="Tu cuenta"><svg class="i" style="width:18px;height:18px"><use href="#home"/></svg></span></div>
+        <h2 class="title">Hola, <em>buen día</em></h2>
+        <p class="sub">Tenés dos tareas esta semana y una garantía por vencer.</p>
+        <div class="home-card"><img src="assets/img/living-familia.webp" alt=""><span class="chip"><svg class="i" style="width:13px;height:13px"><use href="#check"/></svg>Entregada</span><div class="cap"><b>Tu vivienda</b><span>Manual activo desde la entrega</span></div></div>
+        <button class="alert" data-go="garantias" style="width:100%;text-align:left"><span class="ico"><svg class="i"><use href="#shield"/></svg></span><div style="flex:1"><b>Aire acondicionado split</b><span>La garantía vence en 45 días. Si algo no anda bien, reportalo antes.</span></div><svg class="i chev"><use href="#chev"/></svg></button>
+        <div class="sec"><h3>Esta semana</h3><button data-go="agenda">Ver agenda</button></div>
+        <button class="card" data-go="agenda"><span class="ico"><svg class="i"><use href="#drop"/></svg></span><div class="t"><b>Revisar sifones de la cocina</b><small>Jueves · 10 min · Vos</small></div><svg class="i chev"><use href="#chev"/></svg></button>
+        <button class="card" data-go="agenda"><span class="ico"><svg class="i"><use href="#zap"/></svg></span><div class="t"><b>Probar el interruptor diferencial</b><small>Sábado · 1 min · Vos</small></div><svg class="i chev"><use href="#chev"/></svg></button>
+        <div class="sec"><h3>Accesos</h3></div>
+        <div class="quick">
+          <button><svg class="i"><use href="#plan"/></svg>Planos</button>
+          <button><svg class="i"><use href="#tool"/></svg>Proveedores</button>
+          <button><svg class="i"><use href="#building"/></svg>Edificio</button>
+          <button data-sheet="emergencia"><svg class="i"><use href="#alert"/></svg>Emergencias</button>
+        </div>
+        <div class="sec"><h3>Consejo de la semana</h3></div>
+        <div class="tip"><p class="label">Humedad y condensación</p><p>Ventilá 30 a 60 minutos en las horas de sol, y el dormitorio a la mañana. Así se evitan la condensación y los hongos.</p></div>
+      </section>
+
+      <!-- MANUAL -->
+      <section class="view" id="v-manual">
+        <h2 class="title">Tu <em>manual</em></h2>
+        <p class="sub">Cada ambiente con sus materiales, cuidados y garantías.</p>
+        <div class="search"><svg class="i"><use href="#search"/></svg>Buscar: piso, termotanque, sifón…</div>
+        <div class="rooms" id="rooms"></div>
+        <div class="sec"><h3>Documentos</h3></div>
+        <div class="card"><span class="ico"><svg class="i"><use href="#plan"/></svg></span><div class="t"><b>Planos de la unidad</b><small>Planta, eléctrico, sanitario</small></div><span class="chip plain">3 PDF</span></div>
+        <div class="card"><span class="ico"><svg class="i"><use href="#book"/></svg></span><div class="t"><b>Reglamento de copropiedad</b><small>Bienes comunes y de uso exclusivo</small></div><span class="chip plain">PDF</span></div>
+      </section>
+
+      <!-- AMBIENTE -->
+      <section class="view" id="v-ambiente">
+        <button class="back" data-go="manual"><svg class="i"><use href="#back"/></svg>Manual</button>
+        <div class="hero-img"><img id="amb-img" alt=""></div>
+        <h2 class="title" id="amb-title"></h2>
+        <p class="sub" id="amb-sub"></p>
+        <div class="seg" data-seg><span class="pill"></span><button class="on" data-part="el">Elementos</button><button data-part="uso">Buen uso</button></div>
+        <div id="amb-el"></div>
+        <ul class="do" id="amb-uso" hidden></ul>
+      </section>
+
+      <!-- AGENDA -->
+      <section class="view" id="v-agenda">
+        <h2 class="title">Tu <em>agenda</em></h2>
+        <p class="sub">Armada a partir de los materiales y equipos de tu vivienda.</p>
+        <div class="week">
+          <div>L<b>10</b></div><div>M<b>11</b></div><div class="today">M<b>12</b></div><div class="dot">J<b>13</b></div><div>V<b>14</b></div><div class="dot">S<b>15</b></div><div>D<b>16</b></div>
+        </div>
+        <div class="seg" data-seg><span class="pill"></span><button class="on">Mi vivienda</button><button>Edificio</button></div>
+        <p class="month">Noviembre</p>
+        <div class="card task"><button class="check" aria-label="Marcar como hecha"><svg class="i"><use href="#check"/></svg></button><div class="t"><b>Revisar sifones de la cocina</b><small>Jue 13 · Mensual · Vos</small></div></div>
+        <div class="card task"><button class="check" aria-label="Marcar como hecha"><svg class="i"><use href="#check"/></svg></button><div class="t"><b>Probar el interruptor diferencial</b><small>Sáb 15 · Mensual · Vos</small></div></div>
+        <div class="card task done"><button class="check" aria-label="Marcar como pendiente"><svg class="i"><use href="#check"/></svg></button><div class="t"><b>Limpiar desagües del balcón</b><small>Hecho el 2 nov</small></div></div>
+        <p class="month">Diciembre</p>
+        <div class="card task"><button class="check" aria-label="Marcar como hecha"><svg class="i"><use href="#check"/></svg></button><div class="t"><b>Limpiar guías y desagües de aberturas</b><small>Jue 4 · Cada 6 meses · Vos</small></div></div>
+        <div class="card task"><button class="check" aria-label="Marcar como hecha"><svg class="i"><use href="#check"/></svg></button><div class="t"><b>Revisar la impermeabilización</b><small>Jue 18 · Administración</small></div><span class="chip plain">Edificio</span></div>
+        <p class="month">Marzo 2027</p>
+        <div class="card task"><button class="check" aria-label="Marcar como hecha"><svg class="i"><use href="#check"/></svg></button><div class="t"><b>Revisar llaves de corte de agua y gas</b><small>Anual · Técnico recomendado</small></div><span class="chip plain">Técnico</span></div>
+      </section>
+
+      <!-- GARANTÍAS -->
+      <section class="view" id="v-garantias">
+        <h2 class="title">Tus <em>garantías</em></h2>
+        <p class="sub">Te avisamos 60 días antes de cada vencimiento.</p>
+        <div class="w-sum"><div><b>9</b><span>Vigentes</span></div><div class="warn"><b>2</b><span>Por vencer</span></div><div><b>0</b><span>Vencidas</span></div></div>
+        <div class="wi"><div class="wi-h"><b>Aire acondicionado split</b><span class="chip warn">45 días</span></div><p>Proveedor de climatización · hasta 27 dic 2026</p><div class="bar"><i class="warn" style="width:94%"></i></div></div>
+        <div class="wi"><div class="wi-h"><b>Defectos de obra</b><span class="chip warn">4 meses</span></div><p>Empresa constructora · 1 año desde la recepción provisoria</p><div class="bar"><i class="warn" style="width:68%"></i></div></div>
+        <div class="wi"><div class="wi-h"><b>Termotanque 60 L</b><span class="chip">2 años</span></div><p>Fabricante · hasta nov 2028</p><div class="bar"><i style="width:33%"></i></div></div>
+        <div class="wi"><div class="wi-h"><b>Aberturas de aluminio</b><span class="chip">4 años</span></div><p>Proveedor de aberturas · hasta mar 2031</p><div class="bar"><i style="width:14%"></i></div></div>
+        <div class="wi"><div class="wi-h"><b>Impermeabilización de azotea</b><span class="chip">9 años</span></div><p>Contratista · Bien común: la gestiona la administración</p><div class="bar"><i style="width:8%"></i></div></div>
+        <div class="decenal"><p class="label">Responsabilidad decenal</p><b>Hasta marzo de 2036</b><p>Cubre la ruina del edificio por vicios de la construcción o del suelo. No cubre el desgaste normal ni el mal uso.</p></div>
+      </section>
+
+      <!-- REPORTES -->
+      <section class="view" id="v-reportes">
+        <h2 class="title">Tus <em>reportes</em></h2>
+        <p class="sub">Cada problema que reportás llega a la empresa y podés seguir su estado.</p>
+        <button class="primary" data-go="reportar" style="margin:0 0 18px"><svg class="i"><use href="#camera"/></svg>Nuevo reporte</button>
+        <p class="month">En curso</p>
+        <button class="card" data-go="ok"><span class="ico"><svg class="i"><use href="#drop"/></svg></span><div class="t"><b>Agua acumulada en el balcón</b><small>Enviado hoy · Balcón</small></div><span class="chip warn">En curso</span></button>
+        <p class="month">Resueltos</p>
+        <div class="card"><span class="ico"><svg class="i"><use href="#tool"/></svg></span><div class="t"><b>Puerta del placard descuadrada</b><small>Resuelto en 6 días · Dormitorio 1</small></div><span class="chip">Resuelto</span></div>
+        <div class="card"><span class="ico"><svg class="i"><use href="#drop"/></svg></span><div class="t"><b>Pérdida en la canilla de la cocina</b><small>Resuelto en 3 días · Cocina</small></div><span class="chip">Resuelto</span></div>
+      </section>
+
+      <!-- REPORTAR -->
+      <section class="view" id="v-reportar">
+        <button class="back" data-go="reportes"><svg class="i"><use href="#back"/></svg>Reportes</button>
+        <h2 class="title">Nuevo <em>reporte</em></h2>
+        <p class="sub">Le llega a la empresa con tu vivienda, el ambiente y la foto.</p>
+        <button class="photo" id="photo"><span class="in"><span class="ico"><svg class="i"><use href="#camera"/></svg></span>Sacar una foto</span><span class="flash"></span></button>
+        <label for="r-amb">Ambiente</label>
+        <select id="r-amb"><option>Balcón</option><option>Living-comedor</option><option>Cocina</option><option>Baño</option><option>Dormitorio 1</option></select>
+        <label for="r-el">Elemento</label>
+        <select id="r-el"><option>Desagüe</option><option>Baranda</option><option>Impermeabilización</option></select>
+        <label>Urgencia</label>
+        <div class="seg" data-seg style="margin-bottom:0"><span class="pill"></span><button>Baja</button><button class="on">Media</button><button>Alta</button></div>
+        <label for="r-desc">¿Qué pasó?</label>
+        <textarea id="r-desc">Después de la lluvia queda agua acumulada en el balcón y tarda en drenar.</textarea>
+        <button class="primary" data-go="ok"><svg class="i"><use href="#send"/></svg>Enviar reporte</button>
+      </section>
+
+      <!-- OK -->
+      <section class="view" id="v-ok">
+        <div class="ok">
+          <svg class="ok-ring" viewBox="0 0 92 92"><circle cx="46" cy="46" r="44"/><path d="M29 47.5 41 59l23-26"/></svg>
+          <h2>Reporte enviado</h2>
+          <p>La empresa lo recibió con tu vivienda, el ambiente y la foto. Te avisamos cuando haya novedades.</p>
+          <div class="tl">
+            <div class="done"><b>Recibido</b><small>Hoy, 9:41</small></div>
+            <div class="now"><b>En curso</b><small>Asignado a posventa</small></div>
+            <div><b>Resuelto</b><small>Pendiente</small></div>
+          </div>
+          <button class="primary" data-go="reportes">Ver mis reportes</button>
+        </div>
+      </section>
+    </div>
+
+    <nav class="tabbar" aria-label="Navegación principal">
+      <span class="t-ind" aria-hidden="true"></span>
+      <button data-go="home" data-tab="home"><svg class="i"><use href="#home"/></svg>Inicio</button>
+      <button data-go="manual" data-tab="manual"><svg class="i"><use href="#book"/></svg>Manual</button>
+      <button data-go="agenda" data-tab="agenda"><svg class="i"><use href="#calendar"/></svg>Agenda</button>
+      <button data-go="garantias" data-tab="garantias"><svg class="i"><use href="#shield"/></svg>Garantías</button>
+      <button data-go="reportes" data-tab="reportes"><svg class="i"><use href="#camera"/></svg>Reportes</button>
+    </nav>
+
+    <div class="scrim" data-close></div>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-t">
+      <div class="grab"></div><button class="sheet-close" data-close aria-label="Cerrar"><svg class="i"><use href="#back"/></svg></button>
+      <h3 id="sheet-t">En caso de emergencia</h3>
+      <p class="sub" style="margin-bottom:0">Actuá rápido pero con calma.</p>
+      <div class="em">
+        <div><span class="ico"><svg class="i"><use href="#flame"/></svg></span><p><b>Olor a gas</b><span>Cerrá la llave de paso, abrí ventanas y no accionés interruptores.</span></p></div>
+        <div><span class="ico"><svg class="i"><use href="#drop"/></svg></span><p><b>Pérdida de agua</b><span>Cerrá la llave de paso general. Si la mancha deja de crecer, es una cañería: llamá a un sanitario.</span></p></div>
+        <div><span class="ico"><svg class="i"><use href="#zap"/></svg></span><p><b>Falla eléctrica</b><span>Bajá el tablero general antes de tocar cualquier enchufe o artefacto.</span></p></div>
+        <div><span class="ico"><svg class="i"><use href="#building"/></svg></span><p><b>Incendio</b><span>Salí y cerrá la puerta. Bajá por la escalera, nunca en ascensor.</span></p></div>
+      </div>
+      <div class="call"><a href="tel:104"><svg class="i"><use href="#phone"/></svg>Bomberos 104</a><a href="#" data-close><svg class="i"><use href="#tool"/></svg>Llamar a posventa</a></div>
+    </div>
+  </div>
+</div>
+
+<script src="vendor/motion.js"></script>
+<script>
+  const AMB = {
+    living: {
+      name: 'Living-comedor', img: 'assets/img/living-familia.webp', pos: '50% 50%', n: 4,
+      sub: '4 elementos',
+      el: [
+        { t: 'Aberturas de aluminio', chip: 'Garantía 5 años', p: 'Limpialas con un paño humedecido en alcohol. Mantené limpias las guías y los agujeros de desagüe para que no entre agua.', m: [['clock', 'Limpiar guías cada 6 meses'], ['tag', 'Proveedor de aberturas']] },
+        { t: 'Piso de madera plastificado', chip: 'Garantía 2 años', p: 'Limpialo con un paño apenas húmedo, nunca con balde. Poné fieltro o regatones en las patas de los muebles y evitá el sol directo por horas.', m: [['clock', 'Revisar juntas y tablillas'], ['tag', 'Proveedor de pisos']] },
+        { t: 'Cortinas roller', chip: 'Vence en 4 meses', warn: true, p: 'Están a más de 5 cm del muro para evitar la condensación. Si la cadena se traba, no la fuerces.', m: [['tag', 'Proveedor de cortinas']] },
+        { t: 'Riel de luminarias', p: 'Lleva lámparas GU10 LED de 7 W, luz cálida. Antes de cambiar una, bajá la llave del tablero.', m: [['tag', 'Repuesto en el proveedor de la obra']] },
+      ],
+      uso: ['Ventilá a diario, mejor en las horas de sol.', 'Cuando riegues las plantas, cuidá de no mojar el piso ni salpicar las paredes.', 'El sol directo por muchas horas decolora pisos y muebles: usá las cortinas.'],
+    },
+    cocina: {
+      name: 'Cocina', img: 'assets/img/living-cocina.webp', pos: '85% 50%', n: 4,
+      sub: '4 elementos · instalación de gas',
+      el: [
+        { t: 'Mesada de granito', chip: 'Garantía 1 año', p: 'Lavala con agua y jabón y enjuagala bien. El limón, el vinagre y la leche dañan la piedra si quedan encima.', m: [['tag', 'Proveedor de mesadas']] },
+        { t: 'Grifería monocomando', chip: 'Garantía 5 años', p: 'No la fuerces al cerrar. Si no necesitás agua caliente, dejá la palanca del lado del frío.', m: [['clock', 'Limpiar aireador cada 3 meses']] },
+        { t: 'Sifón de la pileta', p: 'Revisalo una vez por mes: una pérdida chica arruina el interior del mueble.', m: [['clock', 'Mensual']] },
+        { t: 'Rejillas de ventilación', p: 'Con instalación de gas, la ventilación tiene que ser permanente. No las tapes nunca.', m: [['alert', 'Seguridad']] },
+      ],
+      uso: ['Nunca uses cañerías ni grifería como puesta a tierra de artefactos.', 'Limpiá el melamínico con alcohol o un desengrasante de evaporación rápida.', 'Ventilá siempre que cocines para que el vapor no se deposite en las paredes.'],
+    },
+    dormitorio: {
+      name: 'Dormitorio 1', img: 'assets/img/dormitorio-1.webp', pos: '50% 50%', n: 3,
+      sub: '3 elementos',
+      el: [
+        { t: 'Aire acondicionado split', chip: 'Vence en 45 días', warn: true, p: 'Limpiá los filtros y revisá la unidad exterior. Si notás algo raro, reportalo antes de que venza la garantía.', m: [['clock', 'Filtros cada 3 meses'], ['tag', 'Proveedor de climatización']] },
+        { t: 'Aberturas con DVH', chip: 'Garantía 5 años', p: 'Lubricá los herrajes para que funcionen suaves. Que el vidrio se empañe es normal: limpiá los orificios de salida de agua.', m: [['clock', 'Cada 6 meses']] },
+        { t: 'Placard', p: 'No sobrecargues los estantes y lubricá las correderas una vez por año.', m: [] },
+      ],
+      uso: ['Ventilá a la mañana: la humedad de la noche es la que más condensa.', 'Evitá tener plantas en el dormitorio: de noche consumen oxígeno.', 'Dejá las cortinas a más de 5 cm del muro para que no se formen hongos.'],
+    },
+    bano: {
+      name: 'Baño', img: '', pos: '50% 50%', n: 3,
+      sub: '3 elementos · ventilación forzada',
+      el: [
+        { t: 'Sifones y cajas', p: 'Mantenelos limpios y con agua para evitar malos olores. Se revisan levantando la tapa; no uses elementos punzantes.', m: [['clock', 'Mensual']] },
+        { t: 'Cisterna y grifería', chip: 'Garantía 5 años', p: 'Una canilla que gotea pierde 48 litros por día. Cambiá el cuerito o la junta apenas lo notes.', m: [['clock', 'Revisar pérdidas cada 2 meses']] },
+        { t: 'Mampara', p: 'Secala después de cada ducha y no uses productos abrasivos en el perfil.', m: [] },
+      ],
+      uso: ['No tires basura, pañales ni restos de comida al inodoro.', 'Para desatascar, probá con agua caliente. Si no funciona, llamá a un profesional.', 'Ventilá el baño después de cada ducha.'],
+    },
+    balcon: {
+      name: 'Balcón', img: 'assets/img/balcon-atardecer.webp', pos: '20% 70%', n: 3,
+      sub: 'Bien común de uso exclusivo',
+      el: [
+        { t: 'Desagües', p: 'Mantenelos limpios y destapados, sobre todo antes de las lluvias.', m: [['clock', 'Cada 6 meses']] },
+        { t: 'Impermeabilización', chip: 'Bien común', p: 'Dura unos 10 años. Cualquier obra en el balcón necesita el acuerdo de la administración.', m: [['building', 'Administración']] },
+        { t: 'Baranda metálica', p: 'Hay que repintarla cada 3 años, o antes si aparece óxido.', m: [['clock', 'Cada 3 años']] },
+      ],
+      uso: ['No hagas perforaciones ni obras sin consultar a la administración.', 'Colocá protecciones si hay niños en la casa.'],
+    },
+    comunes: {
+      name: 'Áreas comunes', img: 'assets/img/parrillero.webp', pos: '50% 50%', n: 3,
+      sub: 'Parrillero · SUM · terraza',
+      el: [
+        { t: 'Parrillero', p: 'Limpiá el hollín después de cada uso: es muy inflamable.', m: [['building', 'Uso compartido']] },
+        { t: 'Salón de usos múltiples', p: 'Se reserva desde la app. Cuidarlo es responsabilidad de todos los vecinos.', m: [['calendar', 'Reservar']] },
+        { t: 'Extintores', p: 'Tienen que tener la revisión al día. La administración controla los vencimientos.', m: [['clock', 'Anual']] },
+      ],
+      uso: ['Los bienes comunes son de todos: cualquier cambio necesita el acuerdo de la copropiedad.'],
+    },
+  };
+  const ORDER = [['living', '50% 50%'], ['cocina', '85% 50%'], ['dormitorio', '50% 50%'], ['bano', '50% 50%'], ['balcon', '20% 70%'], ['comunes', '50% 50%']];
+
+  const M = window.Motion;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const motionOn = !!M && !reduce;
+  const EASE = [0.22, 1, 0.36, 1];
+  const params = new URLSearchParams(location.search);
+  if (params.has('embed')) document.body.classList.add('embed');
+  const ic = id => `<svg class="i"><use href="#${id}"/></svg>`;
+
+  const PHOTO = { living: ['living-familia', '50% 50%'], cocina: ['living-cocina', '85% 50%'], dormitorio: ['dormitorio-1', '50% 50%'], balcon: ['balcon-atardecer', '20% 70%'], comunes: ['parrillero', '50% 50%'] };
+  const illus = k => PHOTO[k] ? `<img src="assets/img/${PHOTO[k][0]}.webp" alt="" style="object-position:${PHOTO[k][1]}" loading="lazy">` : ic('drop');
+  document.getElementById('rooms').innerHTML = ORDER.map(([k]) => {
+    const a = AMB[k];
+    return `<button class="room${PHOTO[k] ? '' : ' noimg'}" data-amb="${k}">${illus(k)}<div><b>${a.name}</b><small>${a.n} elementos</small></div></button>`;
+  }).join('');
+
+  function openAmb(k) {
+    const a = AMB[k];
+    const hiImg = document.getElementById('amb-img'); hiImg.parentElement.hidden = !PHOTO[k]; if (PHOTO[k]) { hiImg.src = `assets/img/${PHOTO[k][0]}.webp`; hiImg.style.objectPosition = PHOTO[k][1]; }
+    document.getElementById('amb-title').textContent = a.name;
+    document.getElementById('amb-sub').textContent = a.sub;
+    document.getElementById('amb-el').innerHTML = a.el.map((e, i) => `
+      <div class="el${i === 0 ? ' open' : ''}">
+        <button class="el-h" aria-expanded="${i === 0}"><b>${e.t}</b>${e.chip ? `<span class="chip${e.warn ? ' warn' : ''}">${e.chip}</span>` : ''}<svg class="i chev"><use href="#chev"/></svg></button>
+        <div class="el-body" style="height:${i === 0 ? 'auto' : '0px'}"><div class="el-in"><p>${e.p}</p>${e.m.length ? `<div class="meta">${e.m.map(([ico, s]) => `<span>${ic(ico)}${s}</span>`).join('')}</div>` : ''}</div></div>
+      </div>`).join('');
+    document.getElementById('amb-uso').innerHTML = a.uso.map(u => `<li>${ic('check')}<span>${u}</span></li>`).join('');
+    const seg = document.querySelector('#v-ambiente [data-seg]');
+    seg.querySelectorAll('button').forEach((b, i) => b.classList.toggle('on', i === 0));
+    document.getElementById('amb-el').hidden = false; document.getElementById('amb-uso').hidden = true;
+    go('ambiente');
+    requestAnimationFrame(() => placePill(seg, true));
+  }
+
+  const tabFor = { ambiente: 'manual', ok: 'reportes', reportar: 'reportes' };
+  const tabbar = document.querySelector('.tabbar');
+  const tInd = tabbar.querySelector('.t-ind');
+  let currentView = null;
+
+  function moveTabInd(instant) {
+    const b = tabbar.querySelector('button.on');
+    if (!b) return;
+    const v = { x: b.offsetLeft + 4, width: b.offsetWidth - 8 };
+    if (motionOn && !instant) M.animate(tInd, v, { type: 'spring', bounce: 0.2, visualDuration: 0.35 });
+    else { tInd.style.width = v.width + 'px'; tInd.style.transform = `translateX(${v.x}px)`; }
+  }
+
+  function go(v) {
+    const next = document.getElementById('v-' + v);
+    if (!next || currentView === v) return;
+    const prev = currentView && document.getElementById('v-' + currentView);
+    currentView = v;
+    if (prev) prev.classList.remove('on');
+    next.classList.add('on');
+    next.scrollTop = 0;
+    const t = tabFor[v] || v;
+    tabbar.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
+    tabbar.classList.toggle('hide', v === 'login');
+    document.querySelectorAll('.jump button').forEach(b => b.classList.toggle('on', b.dataset.go === v || (v === 'ambiente' && b.dataset.go === 'manual')));
+    moveTabInd(!prev);
+    next.querySelectorAll('[data-seg]').forEach(s => placePill(s, true));
+    if (!motionOn) return;
+    const kids = [...next.children].slice(0, 7);
+    M.animate(kids, { opacity: [0, 1], y: [14, 0] }, { duration: 0.5, ease: EASE, delay: M.stagger(0.04) });
+    if (v === 'garantias') M.animate(next.querySelectorAll('.bar i'), { scaleX: [0, 1] }, { duration: 0.9, ease: EASE, delay: M.stagger(0.07, { startDelay: 0.2 }) });
+    if (v === 'ok') {
+      const c = next.querySelector('.ok-ring circle'), p = next.querySelector('.ok-ring path');
+      [c, p].forEach(el => { const l = el.getTotalLength(); el.style.strokeDasharray = l; el.style.strokeDashoffset = l; });
+      M.animate(c, { strokeDashoffset: 0 }, { duration: 0.7, ease: EASE });
+      M.animate(p, { strokeDashoffset: 0 }, { duration: 0.45, ease: EASE, delay: 0.45 });
+      M.animate(next.querySelectorAll('.tl div'), { opacity: [0, 1], x: [-8, 0] }, { duration: 0.5, delay: M.stagger(0.12, { startDelay: 0.7 }) });
+    }
+    if (v === 'login') M.animate(next.querySelectorAll('.code span'), { opacity: [0, 1], y: [10, 0] }, { duration: 0.4, ease: EASE, delay: M.stagger(0.06, { startDelay: 0.3 }) });
+  }
+
+  function placePill(seg, instant) {
+    const b = seg.querySelector('button.on'), pill = seg.querySelector('.pill');
+    if (!b || !pill) return;
+    const v = { x: b.offsetLeft - 3, width: b.offsetWidth };
+    if (motionOn && !instant) M.animate(pill, v, { type: 'spring', bounce: 0.15, visualDuration: 0.3 });
+    else { pill.style.width = v.width + 'px'; pill.style.transform = `translateX(${v.x}px)`; }
+  }
+
+  const scrim = document.querySelector('.scrim'), sheet = document.querySelector('.sheet');
+  function sheetOpen(open) {
+    scrim.style.pointerEvents = open ? 'auto' : 'none';
+    if (motionOn) {
+      M.animate(scrim, { opacity: open ? 1 : 0 }, { duration: 0.3 });
+      M.animate(sheet, { y: open ? '0%' : '105%' }, open ? { type: 'spring', bounce: 0.12, visualDuration: 0.45 } : { duration: 0.25, ease: 'easeIn' });
+      if (open) M.animate(sheet.querySelectorAll('.em div'), { opacity: [0, 1], y: [12, 0] }, { duration: 0.4, ease: EASE, delay: M.stagger(0.05, { startDelay: 0.15 }) });
+    } else { scrim.style.opacity = open ? 1 : 0; sheet.style.transform = open ? 'none' : 'translateY(105%)'; }
+  }
+
+  document.addEventListener('click', e => {
+    const t = e.target;
+    const goBtn = t.closest('[data-go]');
+    if (goBtn) { e.preventDefault(); go(goBtn.dataset.go); return; }
+    const amb = t.closest('[data-amb]');
+    if (amb) { openAmb(amb.dataset.amb); return; }
+    if (t.closest('[data-sheet]')) { sheetOpen(true); return; }
+    if (t.closest('[data-close]')) { e.preventDefault(); sheetOpen(false); return; }
+    const check = t.closest('.task .check');
+    if (check) {
+      const task = check.closest('.task');
+      task.classList.toggle('done');
+      if (motionOn) M.animate(check, { scale: [0.8, 1] }, { type: 'spring', bounce: 0.5, visualDuration: 0.3 });
+      return;
+    }
+    const segBtn = t.closest('[data-seg] button');
+    if (segBtn) {
+      const seg = segBtn.parentElement;
+      seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === segBtn));
+      placePill(seg);
+      if (segBtn.dataset.part) {
+        const showEl = segBtn.dataset.part === 'el';
+        const a = document.getElementById('amb-el'), u = document.getElementById('amb-uso');
+        a.hidden = !showEl; u.hidden = showEl;
+        const shown = showEl ? a.children : u.children;
+        if (motionOn) M.animate(shown, { opacity: [0, 1], y: [8, 0] }, { duration: 0.35, ease: EASE, delay: M.stagger(0.04) });
+      }
+      return;
+    }
+    const elH = t.closest('.el-h');
+    if (elH) {
+      const el = elH.parentElement, body = el.querySelector('.el-body');
+      const open = !el.classList.contains('open');
+      el.classList.toggle('open', open);
+      elH.setAttribute('aria-expanded', open);
+      if (motionOn) {
+        const h = body.querySelector('.el-in').offsetHeight;
+        M.animate(body, { height: open ? [body.offsetHeight + 'px', h + 'px'] : [body.offsetHeight + 'px', '0px'] }, { duration: 0.35, ease: EASE })
+          .then(() => { if (el.classList.contains('open')) body.style.height = 'auto'; });
+      } else body.style.height = open ? 'auto' : '0px';
+      return;
+    }
+  });
+
+  const photo = document.getElementById('photo');
+  photo.addEventListener('click', () => {
+    if (photo.querySelector('.shot')) return;
+    const flash = photo.querySelector('.flash');
+    photo.insertAdjacentHTML('afterbegin', `<div class="shot" role="img" aria-label="Foto del balcón"><img src="assets/img/balcon-atardecer.webp" alt=""><span class="chip warn">Foto 1 de 1</span></div>`);
+    const img = photo.querySelector('.shot');
+    photo.querySelector('.in').remove();
+    if (motionOn) {
+      M.animate(flash, { opacity: [0.9, 0] }, { duration: 0.5 });
+      M.animate(img, { scale: [1.08, 1] }, { duration: 0.8, ease: EASE });
+    }
+  });
+
+  addEventListener('resize', () => { moveTabInd(true); document.querySelectorAll('[data-seg]').forEach(s => placePill(s, true)); });
+  go(params.get('v') || (params.has('embed') ? 'home' : 'login'));
+  requestAnimationFrame(() => { moveTabInd(true); document.querySelectorAll('[data-seg]').forEach(s => placePill(s, true)); });
+</script>
+</body>
+</html>
