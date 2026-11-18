@@ -123,8 +123,8 @@ setLevel(1, false);
 const PLAN = [
   { t: 'Interruptor diferencial', s: 'Probar el botón de prueba', every: 1 / 12, who: 'Propietario' },
   { t: 'Sifones y cajas', s: 'Baño y cocina, limpios y con agua', every: 1 / 12, who: 'Propietario' },
-  { t: 'Aberturas', s: 'Limpiar guías y desagües · repintar cada 3 años', every: 0.5, major: 3, who: 'Propietario' },
-  { t: 'Azotea y balcones', s: 'Revisar impermeabilización · renovar a los 10 años', every: 0.5, major: 10, who: 'Administración' },
+  { t: 'Aberturas', s: 'Limpiar guías y desagües. Repintar cada 3 años', every: 0.5, major: 3, who: 'Propietario' },
+  { t: 'Azotea y balcones', s: 'Revisar impermeabilización. Renovarla a los 10 años', every: 0.5, major: 10, who: 'Administración' },
   { t: 'Llaves de agua y gas', s: 'Revisar llaves de corte y equipos de gas', every: 1, who: 'Técnico' },
   { t: 'Paredes interiores', s: 'Repintar', every: 5, who: 'Propietario' },
   { t: 'Instalaciones', s: 'Revisión general de agua, energía y gas', every: 5, who: 'Técnico' },
@@ -140,7 +140,7 @@ for (const r of PLAN) {
     html += `<i class="g-dot${major ? ' major' : r.every < 0.2 ? ' tiny' : ''}" data-t="${(t / 10).toFixed(4)}" style="left:${(t * 10).toFixed(2)}%"></i>`;
   }
   const freq = r.every < 0.2 ? 'Mensual' : r.every === 0.5 ? 'Cada 6 meses' : r.every === 1 ? 'Anual' : `Cada ${r.every} años`;
-  rowsEl.insertAdjacentHTML('beforeend', `<div class="g-row" role="row"><div class="g-name" role="cell"><b>${r.t}</b><small>${freq} · ${r.s}</small></div><div class="g-track" role="cell"><span class="g-fill"></span>${html}</div><span class="g-who" role="cell">${r.who}</span></div>`);
+  rowsEl.insertAdjacentHTML('beforeend', `<div class="g-row" role="row"><div class="g-name" role="cell"><b>${r.t}</b><small>${freq}. ${r.s}</small></div><div class="g-track" role="cell"><span class="g-fill"></span>${html}</div><span class="g-who" role="cell">${r.who}</span></div>`);
 }
 const dots = [...rowsEl.querySelectorAll('.g-dot')], fills = rowsEl.querySelectorAll('.g-fill');
 const gantt = p => { for (const f of fills) f.style.setProperty('--p', p); for (const d of dots) d.classList.toggle('on', +d.dataset.t <= p + 0.001); };
@@ -178,7 +178,7 @@ ptabs.forEach(b => b.addEventListener('click', () => { showPanel(b.dataset.ptab)
 const newRow = document.querySelector('.c-new');
 function routeClaim() {
   const tagEl = newRow.querySelector('.c-route .tag'), who = newRow.querySelector('.c-who'), st = newRow.querySelector('.st');
-  tagEl.className = 'tag ok'; tagEl.textContent = 'En garantía · impermeabilización hasta 2036';
+  tagEl.className = 'tag ok'; tagEl.textContent = 'En garantía hasta 2036 (impermeabilización)';
   who.textContent = 'Impermeabilizaciones del Este';
   st.className = 'st run'; st.textContent = 'Asignado hoy';
   if (motionOn) M.animate([tagEl, who, st], { opacity: [0, 1], scale: [0.94, 1] }, { duration: 0.45, ease: EASE, delay: M.stagger(0.18) });
