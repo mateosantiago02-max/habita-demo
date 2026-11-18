@@ -9,7 +9,7 @@ const lerp = (a, b, t) => a + (b - a) * t;
 export function createFlyover(canvas, opts = {}) {
   const ctx = canvas.getContext('2d');
   const city = makeCity(opts.seed || 11);
-  const COL = { bg: '#F4F3EF', ink: '30,35,33', rio: '79,127,132', oliva: '142,154,59', olivaSolid: '#8E9A3B', olivaSoft: '#E3E7C8' };
+  const COL = { bg: '#EEF0EF', ink: '30,35,33', rio: '79,127,132', oliva: '142,154,59', olivaSolid: '#8E9A3B', olivaSoft: '#E3E7C8' };
 
   // manzana protagonista: la de la torre elegida por la ciudad; el volumen va en su esquina sureste (hacia la rambla)
   const heroBlock = city.blocks.find(b => b.cx === city.hero.x && b.cy === city.hero.y) || city.blocks[0];

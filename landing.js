@@ -31,10 +31,10 @@ const flyover = createFlyover(canvas);
 
 const BEATS = [
   { label: 'Inicio', from: 0, to: 0.13, hero: true },
-  { label: 'Ciudad', from: 0.16, to: 0.38, k: '01', e: 'La ciudad', t: 'Cada obra nueva<br><em>suma casas a la ciudad.</em>', b: 'Y cada casa suma reclamos después de la entrega: por WhatsApp, por mail, sin foto ni ubicación.' },
-  { label: 'Obra', from: 0.4, to: 0.56, k: '02', e: 'La obra', t: 'Todo lo que se sabe de la obra,<br><em>en un solo lugar.</em>', b: 'La empresa sube lo que ya tiene: planos, planillas, fichas técnicas, garantías o el modelo BIM.' },
-  { label: 'Edificio', from: 0.58, to: 0.8, k: '03', e: 'El edificio', t: 'Cada unidad con sus garantías<br><em>y sus responsables.</em>', b: 'Habitá sabe qué subcontratista responde por cada elemento de cada vivienda.' },
-  { label: 'Vivienda', from: 0.82, to: 1.01, k: '04', e: 'La vivienda', t: 'Y cuando algo falla,<br><em>el reclamo llega solo.</em>', b: 'Con foto, cruzado con la garantía y asignado al subcontratista que corresponde.' },
+  { label: 'Ciudad', from: 0.16, to: 0.38, t: 'Cada obra nueva suma<br>viviendas a la ciudad', b: 'Y después de la entrega, cada vivienda puede tener reclamos.' },
+  { label: 'Obra', from: 0.4, to: 0.56, t: 'Los documentos de la obra,<br>en un solo lugar', b: 'Planos, planillas, fichas técnicas, garantías o el modelo BIM.' },
+  { label: 'Edificio', from: 0.58, to: 0.8, t: 'Cada vivienda con sus<br>garantías y responsables', b: 'Para cada elemento, Habitá sabe quién responde y hasta cuándo.' },
+  { label: 'Vivienda', from: 0.82, to: 1.01, t: 'Cuando algo falla,<br>el reclamo llega completo', b: 'Con foto, con la garantía revisada y asignado a quien corresponde.' },
 ];
 const beatsEl = stage.querySelector('.beats');
 const railEl = stage.querySelector('.fly-rail');
@@ -43,7 +43,7 @@ const beats = BEATS.map((b, i) => {
   if (!b.hero) {
     el = document.createElement('div');
     el.className = 'beat';
-    el.innerHTML = `<p class="eyebrow"><b>${b.k}</b>${b.e}</p><h2>${b.t}</h2><p class="beat-b">${b.b}</p>`;
+    el.innerHTML = `<h2>${b.t}</h2><p class="beat-b">${b.b}</p>`;
     beatsEl.appendChild(el);
     splitLines(el.querySelector('h2'));
   }
@@ -63,7 +63,7 @@ function showBeat(b, on) {
     el.classList.add('on');
     M.animate(el, { opacity: 1 }, { duration: 0.01 });
     M.animate(el.querySelectorAll('.line > span'), { y: ['110%', '0%'] }, { duration: 0.85, ease: EASE, delay: M.stagger(0.08) });
-    M.animate(el.querySelectorAll('.eyebrow, .beat-b'), { opacity: [0, 1], y: [12, 0] }, { duration: 0.6, ease: EASE, delay: M.stagger(0.1, { startDelay: 0.1 }) });
+    M.animate(el.querySelectorAll('.beat-b'), { opacity: [0, 1], y: [12, 0] }, { duration: 0.6, ease: EASE, delay: M.stagger(0.1, { startDelay: 0.1 }) });
   } else {
     M.animate(el, { opacity: 0 }, { duration: 0.22 }).then(() => { if (!b.on) el.classList.remove('on'); });
   }
@@ -217,7 +217,7 @@ addEventListener('scroll', () => {
     const dpr = Math.min(devicePixelRatio, 2), w = cv.clientWidth, h = cv.clientHeight;
     cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const s = Math.max(w, h) / 1300;
-    ctx.strokeStyle = 'rgba(244,243,239,.22)'; ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(238, 240, 239,.22)'; ctx.lineWidth = 1;
     for (const b of city.blocks) {
       ctx.beginPath(); chamferRect(b.cx, b.cy, b.size, b.ch).forEach(([x, y], i) => { const X = w * 0.55 + x * s, Y = h * 0.75 - (y - 300) * s; i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }); ctx.closePath(); ctx.stroke();
     }
@@ -225,45 +225,16 @@ addEventListener('scroll', () => {
   draw(); addEventListener('resize', draw);
 })();
 
-/* ---------------- Frase ---------------- */
-const statement = document.querySelector('[data-words]');
-const words = [];
-(function wrap(node) {
-  [...node.childNodes].forEach(n => {
-    if (n.nodeType === 3) {
-      const frag = document.createDocumentFragment();
-      n.textContent.split(/(\s+)/).forEach(part => {
-        if (!part) return;
-        if (/^\s+$/.test(part)) frag.appendChild(document.createTextNode(part));
-        else { const s = document.createElement('span'); s.className = 'w'; s.textContent = part; frag.appendChild(s); words.push(s); }
-      });
-      n.replaceWith(frag);
-    } else wrap(n);
-  });
-})(statement);
-
+/* ---------------- Movimiento ----------------
+   Un solo momento orquestado (carga + apertura). El resto del movimiento responde a algo:
+   el plan se llena con el scroll porque muestra el paso del tiempo, y el panel reacciona al tocarlo. */
 if (!motionOn) {
-  gantt(1); words.forEach(w => (w.style.opacity = 1));
-  document.querySelectorAll('[data-count]').forEach(el => (el.textContent = el.dataset.count));
+  gantt(1);
 } else {
-  const { animate, scroll, inView, stagger } = M;
+  const { animate, scroll } = M;
   runIntro();
   scroll(animate('.progress', { scaleX: [0, 1] }, { ease: 'linear' }));
-  document.querySelectorAll('main [data-lines]').forEach(el => {
-    if (hero.contains(el)) return;
-    inView(el, () => { animate(el.querySelectorAll('.line > span'), { y: ['110%', '0%'] }, { duration: 0.95, ease: EASE, delay: stagger(0.09) }); }, { amount: 0.4 });
-  });
-  const groups = new Map();
-  document.querySelectorAll('main [data-reveal]').forEach(el => {
-    if (hero.contains(el)) return;
-    const p = el.parentElement; if (!groups.has(p)) groups.set(p, []); groups.get(p).push(el);
-  });
-  groups.forEach((els, parent) => inView(parent, () => { animate(els, { opacity: [0, 1], y: [24, 0] }, { duration: 0.85, ease: EASE, delay: stagger(0.09, { startDelay: 0.1 }) }); }, { amount: 0.12 }));
-  document.querySelectorAll('[data-count]').forEach(el => inView(el, () => { animate(0, +el.dataset.count, { duration: 1.5, ease: EASE, onUpdate: v => (el.textContent = Math.round(v)) }); }, { amount: 0.6 }));
-  scroll(p => { const n = p * words.length * 1.15; for (let i = 0; i < words.length; i++) words[i].style.opacity = clamp(n - i, 0.16, 1); }, { target: statement, offset: ['start 0.85', 'end 0.5'] });
   scroll(p => gantt(p), { target: rowsEl, offset: ['start 0.75', 'end 0.6'] });
-  // los archivos "se leen" uno por uno al entrar
-  inView('.docs', () => { animate('.docs-row:not(.off) .st', { opacity: [0, 1], x: [-6, 0] }, { duration: 0.4, delay: stagger(0.12, { startDelay: 0.3 }) }); }, { amount: 0.3 });
 }
 
 
