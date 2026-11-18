@@ -31,10 +31,10 @@ const flyover = createFlyover(canvas);
 
 const BEATS = [
   { label: 'Inicio', from: 0, to: 0.13, hero: true },
-  { label: 'Ciudad', from: 0.16, to: 0.38, k: '01', e: 'La ciudad', t: 'Cada obra nueva<br><em>suma casas a la ciudad.</em>', b: 'Y cada casa se entrega con un manual en papel que casi nadie vuelve a abrir.' },
-  { label: 'Obra', from: 0.4, to: 0.56, k: '02', e: 'La obra', t: 'Todo lo que se sabe de la obra,<br><em>en un solo lugar.</em>', b: 'La empresa sube lo que ya tiene: planos, manual de obra, fichas técnicas, fotos o el modelo BIM.' },
-  { label: 'Edificio', from: 0.58, to: 0.8, k: '03', e: 'El edificio', t: 'Ordenado por piso,<br><em>vivienda y ambiente.</em>', b: 'Habitá arma el manual de cada unidad a partir de esa documentación.' },
-  { label: 'Vivienda', from: 0.82, to: 1.01, k: '04', e: 'La vivienda', t: 'Y cada propietario<br><em>recibe el suyo.</em>', b: 'El mantenimiento, las garantías y los reclamos de su casa, en el celular.' },
+  { label: 'Ciudad', from: 0.16, to: 0.38, k: '01', e: 'La ciudad', t: 'Cada obra nueva<br><em>suma casas a la ciudad.</em>', b: 'Y cada casa suma reclamos después de la entrega: por WhatsApp, por mail, sin foto ni ubicación.' },
+  { label: 'Obra', from: 0.4, to: 0.56, k: '02', e: 'La obra', t: 'Todo lo que se sabe de la obra,<br><em>en un solo lugar.</em>', b: 'La empresa sube lo que ya tiene: planos, planillas, fichas técnicas, garantías o el modelo BIM.' },
+  { label: 'Edificio', from: 0.58, to: 0.8, k: '03', e: 'El edificio', t: 'Cada unidad con sus garantías<br><em>y sus responsables.</em>', b: 'Habitá sabe qué subcontratista responde por cada elemento de cada vivienda.' },
+  { label: 'Vivienda', from: 0.82, to: 1.01, k: '04', e: 'La vivienda', t: 'Y cuando algo falla,<br><em>el reclamo llega solo.</em>', b: 'Con foto, cruzado con la garantía y asignado al subcontratista que corresponde.' },
 ];
 const beatsEl = stage.querySelector('.beats');
 const railEl = stage.querySelector('.fly-rail');
@@ -146,11 +146,69 @@ const dots = [...rowsEl.querySelectorAll('.g-dot')], fills = rowsEl.querySelecto
 const gantt = p => { for (const f of fills) f.style.setProperty('--p', p); for (const d of dots) d.classList.toggle('on', +d.dataset.t <= p + 0.001); };
 
 /* ---------------- App: la lista maneja el teléfono ---------------- */
+const H = window.Habita || { track() {} };
 const frameEl = document.querySelector('.phone iframe');
 document.querySelectorAll('.feat button').forEach(b => b.addEventListener('click', () => {
   document.querySelectorAll('.feat button').forEach(x => x.classList.toggle('on', x === b));
   try { frameEl.contentWindow.go(b.dataset.go); } catch (e) { /* el iframe todavía carga */ }
 }));
+
+/* ---------------- Panel de la empresa ---------------- */
+const ptabs = [...document.querySelectorAll('[data-ptab]')];
+const pviews = [...document.querySelectorAll('[data-pview]')];
+function drawSignature(view) {
+  const sig = view.querySelector('.sig');
+  if (!sig || !motionOn) return;
+  const l = sig.getTotalLength();
+  sig.style.strokeDasharray = l;
+  M.animate(sig, { strokeDashoffset: [l, 0] }, { duration: 1.6, ease: 'easeInOut', delay: 0.25 });
+}
+function showPanel(k) {
+  ptabs.forEach(b => b.classList.toggle('on', b.dataset.ptab === k));
+  pviews.forEach(v => v.classList.toggle('on', v.dataset.pview === k));
+  const v = pviews.find(x => x.dataset.pview === k);
+  if (!motionOn || !v) return;
+  M.animate(v.querySelectorAll('.p-head, .kpis, .claims, .acta, .rep, .p-note'), { opacity: [0, 1], y: [10, 0] }, { duration: 0.45, ease: EASE, delay: M.stagger(0.05) });
+  if (k === 'reportes') v.querySelectorAll('.bars i').forEach((el, i) => M.animate(el, { scaleX: [0, +getComputedStyle(el).getPropertyValue('--w')] }, { duration: 0.9, ease: EASE, delay: 0.15 + i * 0.07 }));
+  if (k === 'acta') drawSignature(v);
+}
+ptabs.forEach(b => b.addEventListener('click', () => { showPanel(b.dataset.ptab); H.track('panel-' + b.dataset.ptab); }));
+
+// Un reclamo nuevo se clasifica y se asigna solo
+const newRow = document.querySelector('.c-new');
+function routeClaim() {
+  const tagEl = newRow.querySelector('.c-route .tag'), who = newRow.querySelector('.c-who'), st = newRow.querySelector('.st');
+  tagEl.className = 'tag ok'; tagEl.textContent = 'En garantía · impermeabilización hasta 2036';
+  who.textContent = 'Impermeabilizaciones del Este';
+  st.className = 'st run'; st.textContent = 'Asignado hoy';
+  if (motionOn) M.animate([tagEl, who, st], { opacity: [0, 1], scale: [0.94, 1] }, { duration: 0.45, ease: EASE, delay: M.stagger(0.18) });
+}
+if (newRow) {
+  if (!motionOn) routeClaim();
+  else M.inView(newRow, () => {
+    M.animate(newRow, { opacity: [0, 1], y: [-14, 0] }, { duration: 0.6, ease: EASE, delay: 0.3 });
+    setTimeout(routeClaim, 1700);
+  }, { amount: 0.8 });
+}
+
+/* ---------------- Medición: hasta dónde bajó y qué vio ---------------- */
+const depths = [25, 50, 75, 100];
+addEventListener('scroll', () => {
+  const p = (scrollY + innerHeight) / document.documentElement.scrollHeight * 100;
+  while (depths.length && p >= depths[0] - 1) H.track('scroll-' + depths.shift());
+}, { passive: true });
+if (M) ['posventa', 'carga', 'app', 'empresas', 'demo'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) M.inView(el, () => { H.track('vio-' + id); }, { amount: 0.35 });
+});
+
+/* WhatsApp flotante en el celular, una vez pasada la apertura */
+const waFloat = document.querySelector('.wa-float');
+const ctaSec = document.getElementById('demo');
+addEventListener('scroll', () => {
+  const ctaTop = ctaSec.getBoundingClientRect().top;
+  waFloat.classList.toggle('on', scrollY > innerHeight * 0.9 && ctaTop > innerHeight * 0.6);
+}, { passive: true });
 
 /* ---------------- Cierre: trazado de la ciudad ---------------- */
 (function ctaPlan() {
@@ -215,10 +273,13 @@ function revealPage() {
   document.documentElement.style.overflow = '';
   animate(0, 1, { duration: 2, ease: EASE, onUpdate: v => (introT = v) });
   animate(hero.querySelectorAll('.line > span'), { y: ['110%', '0%'] }, { duration: 1.1, ease: EASE, delay: stagger(0.12, { startDelay: 0.25 }) });
+  animate('.hero-eyebrow, [data-hero-fade]', { opacity: [0, 1], y: [14, 0] }, { duration: 0.8, ease: EASE, delay: stagger(0.12, { startDelay: 0.55 }) });
   animate('.nav', { opacity: [0, 1], y: [-10, 0] }, { duration: 0.7, ease: EASE, delay: 0.6 });
   animate(railEl.children, { opacity: [0, 1], x: [8, 0] }, { duration: 0.5, delay: stagger(0.06, { startDelay: 0.9 }) });
   animate('.scroll-cue', { opacity: [0, 1] }, { duration: 0.6, delay: 1.2 });
 }
+/* Pantalla de carga: el edificio se levanta piso por piso al ritmo de la carga real
+   (fuentes, imágenes y la app embebida), con un mínimo para que se lea y un máximo para no hacer esperar. */
 function runIntro() {
   const mg = document.querySelector('.intro-mg');
   if (!mg) return;
@@ -227,23 +288,73 @@ function runIntro() {
   introT = 0;
   document.querySelector('.nav').style.opacity = 0;
   document.documentElement.style.overflow = 'hidden';
-  const path = mg.querySelector('.intro-block path');
-  const len = path.getTotalLength();
-  path.style.strokeDasharray = len; path.style.strokeDashoffset = len;
-  const letters = mg.querySelectorAll('.intro-word > span');
-  const roof = mg.querySelector('.intro-word .wm-a svg path');
-  letters.forEach(l => (l.style.opacity = 0));
-  const seq = animate([
-    [path, { strokeDashoffset: [len, 0] }, { duration: 0.9, ease: EASE }],
-    [path, { fillOpacity: [0, 1] }, { duration: 0.4, at: '-0.15' }],
-    [letters, { y: [26, 0], opacity: [0, 1] }, { duration: 0.6, ease: EASE, delay: stagger(0.045), at: '-0.25' }],
-    [roof, { strokeDashoffset: [26, 0] }, { duration: 0.5, ease: EASE, at: '-0.05' }],
-    [mg, { clipPath: ['inset(0% 0% 0% 0%)', 'inset(0% 0% 100% 0%)'] }, { duration: 1, ease: [0.76, 0, 0.24, 1], at: '+0.5' }],
-  ]);
-  let revealed = false;
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const winsG = mg.querySelector('.bld-wins');
+  const wins = [];
+  for (let f = 0; f < 5; f++) for (let c = 0; c < 3; c++) {
+    const r = document.createElementNS(NS, 'rect');
+    r.setAttribute('x', 26 + c * 25); r.setAttribute('y', 124 - 22 * (f + 1) + 7);
+    r.setAttribute('width', 15); r.setAttribute('height', 9); r.setAttribute('rx', 1.5);
+    winsG.appendChild(r);
+    wins.push({ r, at: (f + 0.55 + c * 0.12) / 5, on: false });
+  }
+  const rise = mg.querySelector('.bld-rise');
+  const strokes = ['.bld-ground', '.bld-line', '.bld-roof'].map(s => mg.querySelector(s));
+  strokes.forEach(p => { const l = p.getTotalLength(); p.style.strokeDasharray = l; p.style.strokeDashoffset = l; p.dataset.l = l; });
+  const [ground, line, roofB] = strokes;
+  const pctEl = mg.querySelector('.intro-pct b'), stepEl = mg.querySelector('.intro-step'), bar = mg.querySelector('.intro-bar i');
+  const letters = mg.querySelectorAll('.intro-word > span'), wmRoof = mg.querySelector('.intro-word .wm-a svg path'), tagEl = mg.querySelector('.intro-tag');
+  letters.forEach(l => (l.style.opacity = 0)); tagEl.style.opacity = 0;
+  const STEPS = ['Leyendo planos', 'Ubicando viviendas', 'Cargando garantías', 'Asignando subcontratistas'];
+
+  animate(ground, { strokeDashoffset: [+ground.dataset.l, 0] }, { duration: 0.6, ease: EASE });
+  animate(line, { strokeDashoffset: [+line.dataset.l, 0] }, { duration: 1, ease: EASE, delay: 0.15 });
+
+  let loaded = false;
+  const t0 = performance.now(), MIN = 1900, MAX = 4500;
+  const pageLoad = new Promise(r => (document.readyState === 'complete' ? r() : addEventListener('load', r, { once: true })));
+  Promise.all([document.fonts ? document.fonts.ready : 0, pageLoad]).then(() => (loaded = true));
+  setTimeout(() => (loaded = true), MAX);
+
+  let shown = 0, raf = 0, timer = 0, finished = false, revealed = false, lastT = performance.now();
   const go = () => { if (revealed) return; revealed = true; revealPage(); };
-  const timer = setTimeout(go, Math.max(0, (seq.duration - 0.85) * 1000));
-  const skip = () => { clearTimeout(timer); seq.complete(); go(); };
+  const tick = () => {
+    const now = performance.now(), dt = Math.min(now - lastT, 500); lastT = now;
+    const timeP = Math.min(1, (now - t0) / MIN);
+    const target = Math.min(timeP, loaded ? 1 : 0.86);
+    shown += (target - shown) * (1 - Math.pow(0.86, dt / 16.7)); // igual de rápido con 60 o con 10 cuadros por segundo
+    if (target === 1 && shown > 0.97) shown = 1;
+    rise.style.transform = `scaleY(${(shown * 0.98).toFixed(4)})`;
+    for (const w of wins) if (!w.on && shown >= w.at) { w.on = true; animate(w.r, { opacity: [0, 1] }, { duration: 0.25 }); }
+    pctEl.textContent = Math.round(shown * 100);
+    bar.style.transform = `scaleX(${shown.toFixed(4)})`;
+    stepEl.textContent = shown >= 1 ? 'Listo' : STEPS[Math.min(STEPS.length - 1, Math.floor(shown * STEPS.length))];
+    if (shown >= 1 && !finished) return finale();
+    raf = requestAnimationFrame(tick);
+  };
+  raf = requestAnimationFrame(tick);
+  // Red de seguridad: pase lo que pase, a los 6,5 s se entra a la página
+  setTimeout(() => { if (!revealed) { cancelAnimationFrame(raf); finished = true; mg.remove(); go(); } }, 6500);
+
+  function finale() {
+    finished = true;
+    const seq = animate([
+      [roofB, { strokeDashoffset: [+roofB.dataset.l, 0] }, { duration: 0.45, ease: EASE }],
+      [letters, { y: [26, 0], opacity: [0, 1] }, { duration: 0.6, ease: EASE, delay: stagger(0.045), at: '-0.25' }],
+      [wmRoof, { strokeDashoffset: [26, 0] }, { duration: 0.5, ease: EASE, at: '-0.1' }],
+      [tagEl, { opacity: [0, 1], y: [8, 0] }, { duration: 0.5, at: '-0.35' }],
+      [mg, { clipPath: ['inset(0% 0% 0% 0%)', 'inset(0% 0% 100% 0%)'] }, { duration: 1, ease: [0.76, 0, 0.24, 1], at: '+0.6' }],
+    ]);
+    timer = setTimeout(go, Math.max(0, (seq.duration - 0.85) * 1000));
+    seq.finished.then(() => { go(); mg.remove(); });
+  }
+
+  // Quien no quiere esperar, con tocar o scrollear entra directo
+  const skip = () => {
+    cancelAnimationFrame(raf); clearTimeout(timer); finished = true;
+    animate(mg, { opacity: 0 }, { duration: 0.35 }).finished.then(() => mg.remove());
+    go();
+  };
   ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(ev => addEventListener(ev, skip, { once: true, passive: true }));
-  seq.finished.then(() => { go(); mg.remove(); });
 }

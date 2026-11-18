@@ -3,14 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Habitá · Cada casa de la ciudad, con su manual vivo</title>
-<meta name="description" content="Habitá convierte la documentación de obra en un manual vivo para cada vivienda: mantenimiento, garantías y posventa. Para promotoras, constructoras y estudios de Montevideo.">
+<title>Habitá · La posventa de tu obra, ordenada desde la entrega</title>
+<meta name="description" content="Habitá recibe los reclamos de los propietarios con foto, unidad y garantía, y los manda al subcontratista que corresponde. Cada propietario recibe el manual vivo de su vivienda. Para constructoras, promotoras, cooperativas e IATs de Uruguay.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_UY">
+<meta property="og:site_name" content="Habitá">
+<meta property="og:title" content="La posventa de tu obra, ordenada desde la entrega">
+<meta property="og:description" content="Reclamos con foto que llegan al subcontratista responsable, acta de entrega digital y el manual vivo de cada vivienda en el celular del propietario.">
+<meta property="og:url" content="https://mateosantiago02-max.github.io/habita-demo/">
+<meta property="og:image" content="https://mateosantiago02-max.github.io/habita-demo/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#34402B">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2334402B'/%3E%3Cpath d='M9 19 16 12.5l7 6.5' fill='none' stroke='%238E9A3B' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="styles.css">
+<script src="track.js"></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -18,26 +30,50 @@
   <symbol id="arrow-ur" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
   <symbol id="check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
   <symbol id="alert" viewBox="0 0 24 24"><path d="M12 8v5M12 16.5h.01"/></symbol>
+  <symbol id="wa" viewBox="0 0 24 24"><path d="M4.5 19.5 5.6 16A8 8 0 1 1 8.4 18.6z"/><path d="M9.2 8.6c.2-.5.6-.5.9-.5h.5c.2 0 .4.1.5.4l.6 1.5c.1.2 0 .4-.1.6l-.5.6c.6 1.1 1.5 2 2.6 2.6l.6-.5c.2-.1.4-.2.6-.1l1.5.6c.3.1.4.3.4.5v.5c0 .3 0 .7-.5.9-.6.3-1.6.4-3.2-.4a8.7 8.7 0 0 1-3.6-3.6c-.8-1.6-.7-2.6-.4-3.2z"/></symbol>
+  <symbol id="phone-i" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></symbol>
+  <symbol id="inbox" viewBox="0 0 24 24"><path d="M3.5 13.5 6 5h12l2.5 8.5V19a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1z"/><path d="M3.5 13.5H9l1 2h4l1-2h5.5"/></symbol>
+  <symbol id="shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v6c0 4.5 3.2 7.8 7.5 9 4.3-1.2 7.5-4.5 7.5-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="route" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H15a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h6.5"/></symbol>
+  <symbol id="sign" viewBox="0 0 24 24"><path d="M3.5 18.5c2-3 3.5-7 5-7s0 5 1.5 5 2.5-3 4-3 1 2 2.5 2 2-1 4-1.5"/><path d="M3.5 21.5h17"/></symbol>
+  <symbol id="chart" viewBox="0 0 24 24"><path d="M4 20h16M7 16v-5M12 16V7M17 16v-8"/></symbol>
 </svg>
 <template id="wm"><span class="wordmark">habit<span class="wm-a">a<svg viewBox="0 0 20 11"><path d="M2 9.5 10 2.5l8 7"/></svg></span></span></template>
 
 <div class="progress" aria-hidden="true"></div>
+
+<!-- PANTALLA DE CARGA -->
 <div class="intro-mg" aria-hidden="true">
   <div class="intro-lock">
-    <svg class="intro-block" viewBox="0 0 44 44"><path d="M4 4h36v22L26 40H4z"/></svg>
-    <span class="wordmark intro-word"><span>h</span><span>a</span><span>b</span><span>i</span><span>t</span><span class="wm-a">a<svg viewBox="0 0 20 11"><path d="M2 9.5 10 2.5l8 7"/></svg></span></span>
+    <svg class="intro-bld" viewBox="0 0 120 132">
+      <defs><clipPath id="bld-clip"><path d="M14 14h92v80l-30 30H14z"/></clipPath></defs>
+      <path class="bld-ground" d="M0 124.5h120"/>
+      <g clip-path="url(#bld-clip)">
+        <rect class="bld-rise" x="0" y="0" width="120" height="132"/>
+        <g class="bld-wins"></g>
+      </g>
+      <path class="bld-line" d="M14 14h92v80l-30 30H14z"/>
+      <path class="bld-roof" d="M44 8 60 -4l16 12"/>
+    </svg>
+    <div class="intro-brand">
+      <span class="wordmark intro-word"><span>h</span><span>a</span><span>b</span><span>i</span><span>t</span><span class="wm-a">a<svg viewBox="0 0 20 11"><path d="M2 9.5 10 2.5l8 7"/></svg></span></span>
+      <p class="intro-tag">Posventa y manual vivo de la vivienda</p>
+    </div>
   </div>
+  <div class="intro-status"><span class="intro-step">Leyendo planos</span><span class="intro-pct"><b>0</b>%</span></div>
+  <div class="intro-bar"><i></i></div>
 </div>
 
 <header class="nav">
   <a href="#" aria-label="Habitá, inicio" data-wm></a>
   <nav class="nav-links" aria-label="Secciones">
-    <a href="#carga">Cómo se carga una obra</a>
-    <a href="#plan">Mantenimiento</a>
-    <a href="#app">La app</a>
-    <a href="#empresas">Para empresas</a>
+    <a href="#posventa">Posventa</a>
+    <a href="#carga">Carga de obra</a>
+    <a href="#app">App del propietario</a>
+    <a href="#empresas">Para quién</a>
   </nav>
-  <a class="btn btn-sm" href="#demo">Agendar demo</a>
+  <a class="nav-app" href="app.html" data-open-app="nav">Ver la app <svg class="i"><use href="#arrow-ur"/></svg></a>
+  <a class="btn btn-sm" href="#demo" data-wa="nav"><svg class="i"><use href="#wa"/></svg><span>Verlo en mi próxima obra</span></a>
 </header>
 
 <main>
@@ -47,10 +83,16 @@
     <canvas aria-hidden="true"></canvas>
     <div class="fly-veil" aria-hidden="true"></div>
     <div class="fly-hero">
-      <h1 data-lines>Cada casa de la ciudad,<br><em>con su manual vivo.</em></h1>
+      <p class="eyebrow hero-eyebrow">Para constructoras, promotoras y cooperativas</p>
+      <h1 data-lines>La posventa de tu obra,<br><em>ordenada desde la entrega.</em></h1>
+      <p class="hero-sub" data-hero-fade>Cada reclamo llega con foto, unidad y garantía, y va directo al subcontratista que corresponde. Y cada propietario recibe el manual vivo de su vivienda en el celular.</p>
+      <div class="fly-actions" data-hero-fade>
+        <a class="btn" href="#demo" data-wa="hero"><svg class="i"><use href="#wa"/></svg>Verlo en mi próxima obra</a>
+        <a class="btn btn-sec" href="app.html" data-open-app="hero"><svg class="i"><use href="#phone-i"/></svg>Probar la app</a>
+      </div>
     </div>
     <div class="beats"></div>
-    <div class="unit-tag" aria-hidden="true"><i></i><span class="l"></span><div><b>Una vivienda</b>Su manual, sus tareas y sus garantías</div></div>
+    <div class="unit-tag" aria-hidden="true"><i></i><span class="l"></span><div><b>Apto 302 · Balcón</b>Reclamo en garantía, asignado al subcontratista</div></div>
     <ol class="fly-rail" aria-label="Momentos del sobrevuelo"></ol>
     <div class="scroll-cue" aria-hidden="true"><i></i></div>
   </div>
@@ -61,13 +103,118 @@
   <div class="wrap">
     <div class="sec-head">
       <p class="eyebrow">El problema</p>
-      <p class="statement" data-words>Hoy el manual de la vivienda es un documento largo que se entrega con las llaves y termina en un cajón. El mantenimiento empieza cuando algo ya se rompió, las garantías vencen sin aviso y los reclamos llegan sueltos por WhatsApp. <em>Habitá hace que esa información aparezca cuando hace falta.</em></p>
+      <p class="statement" data-words>Después de la entrega, los reclamos llegan por WhatsApp, por mail y por teléfono, sin foto ni ubicación. Alguien tiene que averiguar de qué unidad es, si sigue en garantía y qué subcontratista responde. Y el manual en papel quedó en un cajón. <em>Habitá ordena todo eso desde el día de la entrega.</em></p>
     </div>
     <ul class="facts" data-reveal>
       <li><b>1 año</b>de garantía de la empresa por defectos de obra, desde la recepción provisoria.</li>
       <li><b>10 años</b>de responsabilidad por vicios de la construcción o del suelo.</li>
-      <li><b>48 litros</b>de agua por día pierde una canilla que gotea.</li>
+      <li><b>Anexo XIV</b>En vivienda pública, el manual de uso y mantenimiento es obligatorio en la entrega.</li>
     </ul>
+  </div>
+</section>
+
+<!-- POSVENTA (panel de la empresa) -->
+<section class="section posventa" id="posventa">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">El panel de la empresa</p>
+      <div>
+        <h2 data-lines>Cada reclamo llega completo<br><em>y va a quien corresponde.</em></h2>
+        <p data-reveal>El propietario reporta desde la app con foto, ambiente y elemento. Habitá lo cruza con la garantía de ese elemento y lo asigna al subcontratista responsable. Si ya no está en garantía o es mantenimiento, se deriva a un técnico y no le cuesta a la empresa.</p>
+      </div>
+    </div>
+
+    <ol class="route-steps">
+      <li data-reveal><svg class="i"><use href="#inbox"/></svg><b>Llega completo</b><span>Unidad, ambiente, elemento y foto. Nadie llama para preguntar de qué apartamento es.</span></li>
+      <li data-reveal><svg class="i"><use href="#shield"/></svg><b>Se cruza con la garantía</b><span>Habitá sabe qué cubre cada garantía, hasta cuándo y quién responde.</span></li>
+      <li data-reveal><svg class="i"><use href="#route"/></svg><b>Va a quien corresponde</b><span>Al subcontratista si está en garantía, a un técnico si no. Los dudosos los decide la empresa.</span></li>
+    </ol>
+
+    <div class="panel" data-reveal>
+      <div class="panel-bar"><i></i><i></i><i></i><span>panel.habita.uy · Torre Ochava</span></div>
+      <div class="panel-body">
+        <aside class="panel-side">
+          <span class="p-tenant">E</span>
+          <button class="on" data-ptab="reclamos"><svg class="i"><use href="#inbox"/></svg><span>Reclamos</span><em>7</em></button>
+          <button data-ptab="acta"><svg class="i"><use href="#sign"/></svg><span>Actas de entrega</span></button>
+          <button data-ptab="reportes"><svg class="i"><use href="#chart"/></svg><span>Reportes</span></button>
+        </aside>
+
+        <div class="panel-main">
+          <!-- Reclamos -->
+          <div class="ptab on" data-pview="reclamos">
+            <div class="p-head"><div><b>Bandeja de reclamos</b><small>Torre Ochava · 48 viviendas · entregada en marzo 2026</small></div><span class="p-chip">Datos de ejemplo</span></div>
+            <div class="kpis">
+              <div><b data-count="7">7</b><span>Abiertos</span></div>
+              <div><b data-count="5">5</b><span>En garantía</span></div>
+              <div><b data-count="2">2</b><span>Fuera de garantía</span></div>
+              <div><b>4,2 <small>días</small></b><span>Resolución promedio</span></div>
+            </div>
+            <div class="claims" role="table" aria-label="Reclamos de ejemplo">
+              <div class="c-row c-head" role="row"><span>Unidad</span><span>Reclamo</span><span>Garantía</span><span>Asignado a</span><span>Estado</span></div>
+              <div class="c-row c-new" role="row">
+                <span><b>Apto 302</b><small>Balcón</small></span>
+                <span class="c-what"><span class="c-photo" style="background-image:url(assets/img/balcon-atardecer.webp)"></span>Agua acumulada en el balcón</span>
+                <span class="c-route"><em class="tag wait">Clasificando…</em></span>
+                <span class="c-who">—</span>
+                <span><em class="st new">Nuevo</em></span>
+              </div>
+              <div class="c-row" role="row"><span><b>Apto 1104</b><small>Dormitorio 1</small></span><span class="c-what"><span class="c-photo" style="background-image:url(assets/img/dormitorio-1.webp)"></span>El aire acondicionado no enfría</span><span><em class="tag ok">En garantía · hasta dic 2026</em></span><span class="c-who">Climatización Sur</span><span><em class="st run">Visita jue 20</em></span></div>
+              <div class="c-row" role="row"><span><b>Apto 201</b><small>Living</small></span><span class="c-what"><span class="c-photo" style="background-image:url(assets/img/living-tv.webp)"></span>Fisura en el revoque</span><span><em class="tag doubt">Dudoso</em></span><span class="c-who">Decide la empresa</span><span><em class="st new">Para revisar</em></span></div>
+              <div class="c-row" role="row"><span><b>Apto 507</b><small>Cocina</small></span><span class="c-what"><span class="c-photo" style="background-image:url(assets/img/living-cocina.webp)"></span>Gotea la canilla de la pileta</span><span><em class="tag out">Fuera de garantía · mantenimiento</em></span><span class="c-who">Técnico recomendado</span><span><em class="st out">Derivado</em></span></div>
+              <div class="c-row" role="row"><span><b>Apto 803</b><small>Baño</small></span><span class="c-what"><span class="c-photo noimg"></span>Junta de la mampara despegada</span><span><em class="tag ok">En garantía · hasta mar 2027</em></span><span class="c-who">Vidriería Centro</span><span><em class="st done">Resuelto en 3 días</em></span></div>
+            </div>
+          </div>
+
+          <!-- Acta -->
+          <div class="ptab" data-pview="acta">
+            <div class="p-head"><div><b>Acta de entrega · Apto 302</b><small>Recorrida con el propietario · 12 nov 2026, 10:15</small></div><span class="p-chip ok">Firmada</span></div>
+            <div class="acta">
+              <ul class="acta-list">
+                <li class="ok"><i></i><span><b>Living-comedor</b><small>Sin observaciones</small></span></li>
+                <li class="ok"><i></i><span><b>Cocina</b><small>Sin observaciones</small></span></li>
+                <li class="obs"><i></i><span><b>Baño</b><small>Falta sellador en la base de la mampara · 1 foto</small></span><em>Pasó a reclamos</em></li>
+                <li class="ok"><i></i><span><b>Dormitorio 1</b><small>Sin observaciones</small></span></li>
+                <li class="ok"><i></i><span><b>Balcón</b><small>Sin observaciones</small></span></li>
+                <li class="ok"><i></i><span><b>Llaves y manuales</b><small>3 juegos de llaves · manual vivo activado</small></span></li>
+              </ul>
+              <div class="acta-sign">
+                <small>Conformidad del propietario</small>
+                <svg viewBox="0 0 260 90" aria-label="Firma"><path class="sig" d="M12 62c14-2 22-38 32-40s-6 40 6 42 18-34 30-34-4 30 8 30 16-22 26-22 2 18 12 18 14-12 22-14M150 58c10-20 20-32 24-28s-14 30-4 30 18-18 26-18 0 14 10 14 20-10 34-12"/></svg>
+                <p><b>María Rodríguez</b> · 12 nov 2026, 10:42<br>Copia enviada a su email y al manual de la vivienda.</p>
+              </div>
+            </div>
+            <p class="p-note">Cada observación del acta entra a la bandeja como reclamo en garantía, con su foto y el subcontratista responsable.</p>
+          </div>
+
+          <!-- Reportes -->
+          <div class="ptab" data-pview="reportes">
+            <div class="p-head"><div><b>Reportes · Torre Ochava</b><small>Desde la entrega · 27 reclamos</small></div><span class="p-chip">Datos de ejemplo</span></div>
+            <div class="rep">
+              <div>
+                <p class="rep-t">Reclamos por rubro</p>
+                <ul class="bars">
+                  <li><span>Impermeabilización</span><i style="--w:.9"></i><b>9</b></li>
+                  <li><span>Aberturas</span><i style="--w:.7"></i><b>7</b></li>
+                  <li><span>Sanitaria</span><i style="--w:.6"></i><b>6</b></li>
+                  <li><span>Eléctrica</span><i style="--w:.4"></i><b>4</b></li>
+                  <li><span>Climatización</span><i style="--w:.1"></i><b>1</b></li>
+                </ul>
+              </div>
+              <div>
+                <p class="rep-t">Respuesta por subcontratista</p>
+                <ul class="subs">
+                  <li><span>Vidriería Centro</span><b>2,4 días</b></li>
+                  <li><span>Impermeabilizaciones del Este</span><b>3,1 días</b></li>
+                  <li class="warn"><span>Aberturas del Sur</span><b>6,8 días</b></li>
+                </ul>
+                <p class="p-note">Sabés qué rubro y qué subcontratista te generan más posventa, antes de contratar la próxima obra.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -78,24 +225,24 @@
       <p class="eyebrow">Cómo se carga una obra</p>
       <div>
         <h2 data-lines>Se carga con la documentación<br><em>que la obra ya tiene.</em></h2>
-        <p data-reveal>La empresa no prepara nada nuevo: sube lo que ya existe, desde el manual en PDF y fotos de las terminaciones hasta el modelo BIM. Cuanta más información, menos queda para completar a mano.</p>
+        <p data-reveal>La empresa no prepara nada nuevo: sube lo que ya existe, desde el manual en PDF y las planillas hasta el modelo BIM. Habitá lo lee y arma las viviendas, los ambientes, las garantías y los subcontratistas. Cuanta más información, menos queda para completar a mano.</p>
       </div>
     </div>
     <div class="load-levels" role="tablist" aria-label="Nivel de información disponible">
       <button class="lvl" data-level="0" role="tab"><p class="eyebrow">Esencial</p><h3>PDF y fotos</h3><p>El manual de obra, los planos en PDF y fotos de las terminaciones.</p><div class="dots"><i class="f"></i><i></i><i></i></div></button>
-      <button class="lvl on" data-level="1" role="tab"><p class="eyebrow">Completo</p><h3>Planos y fichas</h3><p>Suma los planos de AutoCAD, las fichas técnicas, las garantías y la planilla de unidades y proveedores.</p><div class="dots"><i class="f"></i><i class="f"></i><i></i></div></button>
+      <button class="lvl on" data-level="1" role="tab"><p class="eyebrow">Completo</p><h3>Planos y fichas</h3><p>Suma los planos de AutoCAD, las fichas técnicas, las garantías y la planilla de unidades y subcontratistas.</p><div class="dots"><i class="f"></i><i class="f"></i><i></i></div></button>
       <button class="lvl" data-level="2" role="tab"><p class="eyebrow">BIM</p><h3>Modelo completo</h3><p>Suma el modelo IFC o Revit, con cada elemento ubicado en su ambiente.</p><div class="dots"><i class="f"></i><i class="f"></i><i class="f"></i></div></button>
     </div>
     <div class="docs" data-reveal role="table" aria-label="Documentos de la obra y lo que aporta cada uno">
-      <div class="docs-row docs-head" role="row"><span role="columnheader">Documento</span><span role="columnheader">Qué aporta al manual</span><span role="columnheader">Estado</span></div>
+      <div class="docs-row docs-head" role="row"><span role="columnheader">Documento</span><span role="columnheader">Qué aporta</span><span role="columnheader">Estado</span></div>
       <div class="docs-row" data-l="0" role="row"><span class="doc" role="cell"><span class="ext pdf">PDF</span><b>Manual de uso de la obra</b></span><span class="gives" role="cell">Recomendaciones de uso y cuidado de cada ambiente</span><span class="st" role="cell"><i></i><em>Leído</em></span></div>
       <div class="docs-row" data-l="0" role="row"><span class="doc" role="cell"><span class="ext pdf">PDF</span><b>Planos de arquitectura</b></span><span class="gives" role="cell">Las viviendas de la obra, con su planta y sus ambientes</span><span class="st" role="cell"><i></i><em>Leído</em></span></div>
       <div class="docs-row" data-l="0" role="row"><span class="doc" role="cell"><span class="ext img">JPG</span><b>Fotos de las terminaciones</b></span><span class="gives" role="cell">Fotos reales de cada material en el manual</span><span class="st" role="cell"><i></i><em>Leído</em></span></div>
       <div class="docs-row" data-l="1" role="row"><span class="doc" role="cell"><span class="ext cad">DWG</span><b>Planos de AutoCAD</b></span><span class="gives" role="cell">Recorrido de las instalaciones y medidas de cada ambiente</span><span class="st" role="cell"><i></i><em>Leído</em></span></div>
-      <div class="docs-row" data-l="1" role="row"><span class="doc" role="cell"><span class="ext pdf">PDF</span><b>Fichas técnicas y garantías</b></span><span class="gives" role="cell">Marca, modelo, cuidado y vencimiento de cada elemento</span><span class="st" role="cell"><i></i><em>Leído</em></span></div>
-      <div class="docs-row" data-l="1" role="row"><span class="doc" role="cell"><span class="ext xls">XLS</span><b>Planilla de unidades y proveedores</b></span><span class="gives" role="cell">Propietarios a invitar y contacto de cada proveedor</span><span class="st" role="cell"><i></i><em>Leído</em></span></div>
+      <div class="docs-row" data-l="1" role="row"><span class="doc" role="cell"><span class="ext pdf">PDF</span><b>Fichas técnicas y garantías</b></span><span class="gives" role="cell">Marca, modelo, cuidado, vencimiento y responsable de cada elemento</span><span class="st" role="cell"><i></i><em>Leído</em></span></div>
+      <div class="docs-row" data-l="1" role="row"><span class="doc" role="cell"><span class="ext xls">XLS</span><b>Planilla de unidades y subcontratistas</b></span><span class="gives" role="cell">Propietarios a invitar y quién responde por cada rubro</span><span class="st" role="cell"><i></i><em>Leído</em></span></div>
       <div class="docs-row" data-l="2" role="row"><span class="doc" role="cell"><span class="ext bim">IFC</span><b>Modelo BIM (IFC o Revit)</b></span><span class="gives" role="cell">Cada elemento ubicado en su ambiente, con material y cantidad</span><span class="st" role="cell"><i></i><em>Leído</em></span></div>
-      <div class="docs-foot"><p><b>Antes de publicar, revisás lo que armó Habitá.</b> Lo que falta se completa una vez y se aplica a todas las viviendas iguales.</p><span class="pub">Revisar y publicar</span></div>
+      <div class="docs-foot"><p><b>Antes de publicar, revisás lo que armó Habitá.</b> Nada llega al propietario sin tu visto bueno, y lo que falta se completa una vez para todas las viviendas iguales.</p><span class="pub">Revisar y publicar</span></div>
     </div>
   </div>
 </section>
@@ -104,10 +251,10 @@
 <section id="plan" class="section plan">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">Plan de mantenimiento</p>
+      <p class="eyebrow">El manual vivo</p>
       <div>
-        <h2 data-lines>Diez años de cuidados,<br><em>listos el día de la entrega.</em></h2>
-        <p data-reveal>Cada material y equipo trae su periodicidad. Habitá arma el calendario de la vivienda y del edificio, y reparte cada tarea entre el propietario, la administración o un técnico.</p>
+        <h2 data-lines>Y el propietario sabe<br><em>qué cuidar y cuándo.</em></h2>
+        <p data-reveal>Cada material y equipo trae su periodicidad. Habitá arma el calendario de la vivienda y reparte cada tarea entre el propietario, la administración o un técnico. Menos reclamos por falta de mantenimiento, y cuando aparecen, quedan registrados.</p>
       </div>
     </div>
     <div class="gantt" role="table" aria-label="Plan de mantenimiento a 10 años">
@@ -123,17 +270,22 @@
   <div class="wrap">
     <div class="sec-head">
       <p class="eyebrow">La app del propietario</p>
-      <h2 data-lines>Lo que ve el propietario<br><em>en su celular.</em></h2>
+      <div>
+        <h2 data-lines>Lo que ve el propietario<br><em>en su celular.</em></h2>
+        <p data-reveal>Con la marca de tu empresa, gratis para el propietario. Tocá cada punto y el teléfono te lo muestra.</p>
+      </div>
     </div>
     <div class="app-grid">
       <div class="feat" data-reveal>
-        <button class="on" data-go="home"><span><b>Su vivienda, con la marca de tu empresa</b><small>Entra con un código que le llega por WhatsApp, sin contraseña. Ve sus tareas de la semana y lo que está por vencer.</small></span></button>
-        <button data-go="manual"><span><b>El manual, por ambiente</b><small>Cada material con fotos de la obra: qué es, cómo se limpia, cada cuánto se mantiene y a quién llamar.</small></span></button>
-        <button data-go="agenda"><span><b>Mantenimiento con fecha</b><small>Recordatorios con el paso a paso, para la vivienda y para el edificio.</small></span></button>
+        <button class="on" data-go="home"><span><b>Su vivienda, con tu marca</b><small>Entra con el link o el código que le llega por email, sin contraseña. Ve lo que está por vencer y lo que tiene que hacer esta semana.</small></span></button>
+        <button data-go="acta"><span><b>Acta de entrega digital</b><small>Recorre la vivienda ambiente por ambiente, deja observaciones con foto y firma en la pantalla.</small></span></button>
+        <button data-go="reportar"><span><b>Reclamos con foto</b><small>Llegan a la empresa con la unidad, el ambiente y el elemento identificados.</small></span></button>
+        <button data-go="reclamo"><span><b>Seguimiento de cada reclamo</b><small>Ve si está en garantía, quién lo atiende y cuándo es la visita. Al final califica la atención.</small></span></button>
         <button data-go="garantias"><span><b>Garantías que avisan</b><small>Aviso 60 días antes de cada vencimiento, con el responsable de cada una.</small></span></button>
-        <button data-go="reportar"><span><b>Reportes con foto</b><small>Llegan a la empresa con la unidad, el ambiente y el elemento identificados.</small></span></button>
+        <button data-go="manual"><span><b>El manual, por ambiente</b><small>Cada material con fotos de la obra: qué es, cómo se limpia, cada cuánto se mantiene y a quién llamar.</small></span></button>
+        <a class="btn btn-sec feat-open" href="app.html" data-open-app="seccion-app">Abrir la app completa <svg class="i"><use href="#arrow-ur"/></svg></a>
       </div>
-      <div class="phone-wrap" data-reveal><div class="phone"><span class="island" aria-hidden="true"></span><iframe src="app.html?embed=1" title="Ejemplo de la app del propietario"></iframe></div></div>
+      <div class="phone-wrap" data-reveal><div class="phone"><span class="island" aria-hidden="true"></span><iframe src="app.html?embed=1" title="Ejemplo de la app del propietario" loading="lazy"></iframe></div></div>
     </div>
   </div>
 </section>
@@ -144,16 +296,17 @@
     <div class="sec-head">
       <p class="eyebrow">Para quién</p>
       <div>
-        <h2 data-lines>Para promotoras, constructoras,<br><em>estudios y cooperativas.</em></h2>
-        <p data-reveal>En vivienda pública el manual de uso y mantenimiento es obligatorio en la entrega. Habitá lo resuelve y, además, lo convierte en un servicio de posventa con tu marca.</p>
+        <h2 data-lines>Para constructoras, promotoras,<br><em>cooperativas e IATs.</em></h2>
+        <p data-reveal>En vivienda pública el manual de uso y mantenimiento es obligatorio en la entrega (Anexo XIV de los pliegos). Habitá lo cumple con un manual vivo en lugar de un PDF, y le suma la posventa con tu marca.</p>
       </div>
     </div>
     <div class="audience">
-      <div class="aud" data-reveal><svg class="mk" viewBox="0 0 40 40"><path d="M4 4h32v20L24 36H4z" fill="#34402B"/><path d="M12 30V14h8v16M24 30V20h6v10" stroke="#F4F3EF" stroke-width="2" fill="none"/></svg><h3>Promotoras</h3><p>Una entrega a la altura del producto, y menos reclamos fuera de garantía.</p></div>
-      <div class="aud" data-reveal><svg class="mk" viewBox="0 0 40 40"><path d="M4 4h32v20L24 36H4z" fill="#4F7F84"/><path d="M11 28V12h14M11 16h14M25 12v6" stroke="#F4F3EF" stroke-width="2" fill="none"/></svg><h3>Constructoras</h3><p>Posventa ordenada por obra, con registro de cada reporte y su resolución.</p></div>
+      <div class="aud" data-reveal><svg class="mk" viewBox="0 0 40 40"><path d="M4 4h32v20L24 36H4z" fill="#4F7F84"/><path d="M11 28V12h14M11 16h14M25 12v6" stroke="#F4F3EF" stroke-width="2" fill="none"/></svg><h3>Constructoras</h3><p>Cada reclamo al subcontratista responsable, con su foto y su historial. Y sabés quién responde rápido y quién no.</p></div>
+      <div class="aud" data-reveal><svg class="mk" viewBox="0 0 40 40"><path d="M4 4h32v20L24 36H4z" fill="#34402B"/><path d="M12 30V14h8v16M24 30V20h6v10" stroke="#F4F3EF" stroke-width="2" fill="none"/></svg><h3>Promotoras</h3><p>Una entrega a la altura del producto. Lo que no está en garantía se deriva y no vuelve a tu equipo.</p></div>
+      <div class="aud" data-reveal><svg class="mk" viewBox="0 0 40 40"><path d="M4 4h32v20L24 36H4z" fill="#1E2321"/><circle cx="14" cy="15" r="3" fill="#F4F3EF"/><circle cx="24" cy="15" r="3" fill="#F4F3EF"/><circle cx="19" cy="24" r="3" fill="#8E9A3B"/></svg><h3>Cooperativas e IATs</h3><p>El manual obligatorio del Anexo XIV, listo con la documentación de la obra y vivo para cada familia.</p></div>
       <div class="aud" data-reveal><svg class="mk" viewBox="0 0 40 40"><path d="M4 4h32v20L24 36H4z" fill="#8E9A3B"/><path d="M11 12h18v14H11zM11 19h18M20 12v14" stroke="#F4F3EF" stroke-width="2" fill="none"/></svg><h3>Estudios</h3><p>Manuales de obra nueva y de reformas con la identidad del estudio.</p></div>
-      <div class="aud" data-reveal><svg class="mk" viewBox="0 0 40 40"><path d="M4 4h32v20L24 36H4z" fill="#1E2321"/><circle cx="14" cy="15" r="3" fill="#F4F3EF"/><circle cx="24" cy="15" r="3" fill="#F4F3EF"/><circle cx="19" cy="24" r="3" fill="#8E9A3B"/></svg><h3>Cooperativas</h3><p>El cuidado de los bienes comunes repartido entre todos, con fechas claras.</p></div>
     </div>
+    <p class="not-for" data-reveal><b>No es para vos si</b> entregás una obra cada tantos años y los reclamos te entran en una planilla. Habitá rinde cuando hay varias obras en garantía al mismo tiempo.</p>
   </div>
 </section>
 
@@ -163,8 +316,12 @@
   <div class="wrap cta-inner">
     <h2 data-lines>Probemos Habitá<br><em>en tu próxima obra.</em></h2>
     <div data-reveal>
-      <p>Con la documentación que ya tenés. Se cobra por vivienda entregada y para el propietario es gratis.</p>
-      <a class="btn btn-light" href="#demo">Agendar una demo <svg class="i"><use href="#arrow"/></svg></a>
+      <p>Con la documentación que ya tenés. Estamos eligiendo las primeras obras piloto en Montevideo: escribime y te muestro cómo quedaría la tuya.</p>
+      <div class="cta-actions">
+        <a class="btn btn-light" href="#demo" data-wa="cierre"><svg class="i"><use href="#wa"/></svg>Verlo en mi próxima obra</a>
+        <a class="cta-link" href="app.html" data-open-app="cierre">o probá la app del propietario <svg class="i"><use href="#arrow-ur"/></svg></a>
+      </div>
+      <p class="cta-fine">Te responde Santiago por WhatsApp. Se cobra por vivienda entregada; para el propietario es gratis.</p>
     </div>
   </div>
 </section>
@@ -172,8 +329,10 @@
 
 <footer class="foot">
   <span data-wm></span>
-  <span>Montevideo, Uruguay · Maqueta conceptual para presentar la idea · Empresa y datos de ejemplo</span>
+  <span>Montevideo, Uruguay · Maqueta para validar la idea · Empresa, obra y datos de ejemplo</span>
 </footer>
+
+<a class="wa-float" href="#demo" data-wa="flotante" aria-label="Escribir por WhatsApp"><svg class="i"><use href="#wa"/></svg></a>
 
 <script src="vendor/motion.js"></script>
 <script type="module" src="landing.js"></script>

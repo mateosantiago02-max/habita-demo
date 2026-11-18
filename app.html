@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="tokens.css">
+<script src="track.js"></script>
 <style>
   :root {
     --brand: var(--salvia); --brand-soft: var(--salvia-soft); --paper: var(--blanco); --paper-2: var(--arena); --card: #fff;
@@ -224,6 +225,74 @@
   .call a { display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border-radius: 14px; background: var(--ink); color: var(--paper); font-size: 14px; font-weight: 500; text-decoration: none; }
   .call a + a { background: var(--card); color: var(--ink); box-shadow: 0 0 0 1px var(--line); }
 
+  /* Presentación: volver a la web y contacto */
+  .intro-cta { display: grid; gap: 10px; margin-top: 30px; }
+  .intro-cta a { display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border-radius: 999px; background: var(--ink); color: var(--paper); font-size: 14.5px; font-weight: 600; text-decoration: none; }
+  .intro-cta a.sec { background: none; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
+
+  /* Acta de entrega */
+  .steps-bar { display: flex; gap: 4px; margin-bottom: 14px; }
+  .steps-bar i { flex: 1; height: 4px; border-radius: 4px; background: var(--paper-2); }
+  .steps-bar i.f { background: var(--brand); }
+  .ck { background: var(--card); border-radius: 16px; box-shadow: 0 0 0 1px var(--line); padding: 12px 12px 12px 14px; margin-bottom: 8px; }
+  .ck-h { display: flex; align-items: center; gap: 10px; }
+  .ck-h b { flex: 1; font-size: 14px; font-weight: 500; }
+  .ck-seg { display: flex; padding: 2px; background: var(--paper-2); border-radius: 10px; }
+  .ck-seg button { height: 28px; padding: 0 10px; border-radius: 8px; font-size: 12px; color: var(--ink-2); transition: background .2s, color .2s; }
+  .ck-seg button.on { background: var(--card); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  .ck-seg button.on.obs { background: var(--wood); color: #fff; }
+  .ck-obs { display: none; gap: 10px; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-2); line-height: 1.4; }
+  .ck.has-obs .ck-obs { display: flex; }
+  .ck-obs img { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+  .ck-obs .add { width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0; display: grid; place-items: center; background: var(--paper-2); }
+  .sigpad { position: relative; height: 128px; border-radius: 16px; background: var(--card); box-shadow: inset 0 0 0 1.5px #d5cdbf; touch-action: none; overflow: hidden; }
+  .sigpad canvas { position: absolute; inset: 0; width: 100%; height: 100%; cursor: crosshair; }
+  .sigpad span { position: absolute; left: 16px; right: 16px; bottom: 26px; border-bottom: 1.5px dashed #d5cdbf; font-size: 11px; color: var(--ink-3); padding-bottom: 4px; pointer-events: none; }
+  .sigpad.signed span { color: transparent; }
+  .row-btns { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; font-size: 12px; color: var(--ink-3); }
+  .row-btns button { font-size: 12.5px; color: var(--brand); font-weight: 500; }
+
+  /* Seguimiento del reclamo */
+  .gcard { display: flex; gap: 12px; padding: 14px; border-radius: 16px; background: var(--brand-soft); margin-bottom: 4px; }
+  .gcard .ico { background: var(--brand); color: var(--paper); }
+  .gcard b { display: block; font-size: 14px; font-weight: 500; }
+  .gcard span { font-size: 12.5px; color: var(--ink-2); line-height: 1.45; }
+  .gcard.out { background: var(--paper-2); }
+  .gcard.out .ico { background: var(--ink-2); }
+  .tl.full { margin-top: 18px; }
+  .visit { padding: 14px; border-radius: 16px; background: var(--card); box-shadow: 0 0 0 1px var(--line); margin-top: 4px; }
+  .visit b { display: block; font-size: 15px; font-weight: 500; }
+  .visit small { font-size: 12px; color: var(--ink-3); }
+  .visit .two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .visit .two button { height: 42px; border-radius: 12px; font-size: 13.5px; font-weight: 500; background: var(--ink); color: var(--paper); }
+  .visit .two button + button { background: var(--card); color: var(--ink); box-shadow: 0 0 0 1px var(--line); }
+  .visit.ok .two { display: none; }
+  .visit .done-msg { display: none; align-items: center; gap: 8px; margin-top: 10px; font-size: 13px; color: var(--brand); font-weight: 500; }
+  .visit.ok .done-msg { display: flex; }
+  .stars { display: flex; gap: 6px; margin-top: 10px; }
+  .stars button { width: 34px; height: 34px; display: grid; place-items: center; color: #cfc7ba; transition: color .2s, transform .2s; }
+  .stars button.on { color: #C9963A; }
+  .stars button svg.i { width: 26px; height: 26px; fill: currentColor; stroke: none; }
+
+  /* Listas de documentos, contactos y avisos */
+  .contact .acts { display: flex; gap: 6px; }
+  .contact .acts a { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--paper-2); color: var(--ink); }
+  .contact .acts a svg.i { width: 17px; height: 17px; }
+  .sheet-list { display: grid; gap: 8px; margin-top: 14px; }
+  .sheet-list button { display: flex; gap: 12px; align-items: center; text-align: left; padding: 12px; border-radius: 16px; background: var(--card); box-shadow: 0 0 0 1px var(--line); }
+  .sheet-list b { display: block; font-size: 14px; font-weight: 500; }
+  .sheet-list span { font-size: 12px; color: var(--ink-3); }
+  .sheet-list .unread { position: relative; }
+  .sheet-list .unread::after { content: ''; position: absolute; top: 14px; right: 14px; width: 8px; height: 8px; border-radius: 50%; background: var(--wood); }
+  .sheet[hidden] { display: none; }
+
+  /* Invitación a hablar, solo cuando la app se abre sola (no dentro de la web) */
+  .demo-cta { margin-top: 22px; padding: 16px; border-radius: 18px; background: var(--ink); color: var(--paper); }
+  .demo-cta .label { color: rgba(243,238,230,.55); }
+  .demo-cta p { font-family: var(--serif); font-size: 18px; line-height: 1.3; margin: 8px 0 12px; }
+  .demo-cta a { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px; border-radius: 999px; background: var(--paper); color: var(--ink); font-size: 13.5px; font-weight: 600; text-decoration: none; }
+  body.embed .demo-cta, body.embed .web-only { display: none; }
+
   @media (max-width: 900px) {
     body:not(.embed) { padding: 0; display: block; }
     body:not(.embed) .intro { display: none; }
@@ -275,6 +344,12 @@
   <symbol id="tag" viewBox="0 0 24 24"><path d="M3.5 12.5V4a.5.5 0 0 1 .5-.5h8.5l8 8-9 9z"/><circle cx="8" cy="8" r="1.2"/></symbol>
   <symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
   <symbol id="send" viewBox="0 0 24 24"><path d="M20.5 3.5 10 14M20.5 3.5 14 20.5l-4-6.5-6.5-4z"/></symbol>
+  <symbol id="sign" viewBox="0 0 24 24"><path d="M3.5 18.5c2-3 3.5-7 5-7s0 5 1.5 5 2.5-3 4-3 1 2 2.5 2 2-1 4-1.5"/><path d="M3.5 21.5h17"/></symbol>
+  <symbol id="star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.8l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z"/></symbol>
+  <symbol id="file" viewBox="0 0 24 24"><path d="M14 3.5H7a1.5 1.5 0 0 0-1.5 1.5v14A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V8z"/><path d="M14 3.5V8h4.5M9 13h6M9 16.5h4"/></symbol>
+  <symbol id="wa" viewBox="0 0 24 24"><path d="M4.5 19.5 5.6 16A8 8 0 1 1 8.4 18.6z"/><path d="M9.2 8.6c.2-.5.6-.5.9-.5h.5c.2 0 .4.1.5.4l.6 1.5c.1.2 0 .4-.1.6l-.5.6c.6 1.1 1.5 2 2.6 2.6l.6-.5c.2-.1.4-.2.6-.1l1.5.6c.3.1.4.3.4.5v.5c0 .3 0 .7-.5.9-.6.3-1.6.4-3.2-.4a8.7 8.7 0 0 1-3.6-3.6c-.8-1.6-.7-2.6-.4-3.2z"/></symbol>
+  <symbol id="user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></symbol>
+  <symbol id="ext" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
 </svg>
 
 <div class="intro">
@@ -284,11 +359,17 @@
   <p>Lo que ve quien recibe su vivienda: el manual con la marca de la empresa, sin contraseña y sin costo para el propietario.</p>
   <div class="jump">
     <button data-go="login"><span>01</span>Ingreso por invitación<svg class="i"><use href="#arrow"/></svg></button>
-    <button data-go="home"><span>02</span>Inicio<svg class="i"><use href="#arrow"/></svg></button>
-    <button data-go="manual"><span>03</span>Manual por ambiente<svg class="i"><use href="#arrow"/></svg></button>
-    <button data-go="agenda"><span>04</span>Mantenimiento<svg class="i"><use href="#arrow"/></svg></button>
-    <button data-go="garantias"><span>05</span>Garantías<svg class="i"><use href="#arrow"/></svg></button>
-    <button data-go="reportes"><span>06</span>Reportes<svg class="i"><use href="#arrow"/></svg></button>
+    <button data-go="acta"><span>02</span>Acta de entrega con firma<svg class="i"><use href="#arrow"/></svg></button>
+    <button data-go="home"><span>03</span>Inicio<svg class="i"><use href="#arrow"/></svg></button>
+    <button data-go="reportar"><span>04</span>Reportar un problema<svg class="i"><use href="#arrow"/></svg></button>
+    <button data-go="reclamo"><span>05</span>Seguimiento del reclamo<svg class="i"><use href="#arrow"/></svg></button>
+    <button data-go="garantias"><span>06</span>Garantías<svg class="i"><use href="#arrow"/></svg></button>
+    <button data-go="manual"><span>07</span>Manual por ambiente<svg class="i"><use href="#arrow"/></svg></button>
+    <button data-go="agenda"><span>08</span>Mantenimiento<svg class="i"><use href="#arrow"/></svg></button>
+  </div>
+  <div class="intro-cta">
+    <a href="index.html#demo" data-wa="app-escritorio"><svg class="i"><use href="#wa"/></svg>Verlo en mi próxima obra</a>
+    <a class="sec" href="index.html"><svg class="i"><use href="#back"/></svg>Volver a la web</a>
   </div>
 </div>
 
@@ -303,32 +384,111 @@
         <div class="login-body">
           <div class="top"><span class="tenant">E</span><div class="top-t">Logo de tu empresa<small>con Habitá</small></div></div>
           <h1>Te damos la bienvenida <em>a tu casa.</em></h1>
-          <p>La empresa que construyó tu vivienda te invitó a su manual. Ingresá el código que te llegó por WhatsApp.</p>
+          <p>La empresa que construyó tu vivienda te invitó a su manual. Ingresá el código que te llegó por email.</p>
           <div class="code" aria-label="Código de invitación"><span>4</span><span>8</span><span>2</span><span>7</span><span>1</span><span>5</span></div>
-          <button class="primary brand" data-go="home">Entrar a mi vivienda <svg class="i"><use href="#arrow"/></svg></button>
-          <p class="fine">No necesitás contraseña. También podés entrar desde el enlace que te llegó por email.</p>
+          <button class="primary brand" data-go="acta">Recibir mi vivienda <svg class="i"><use href="#arrow"/></svg></button>
+          <p class="fine">No necesitás contraseña. También podés entrar tocando el enlace del email.</p>
         </div>
       </section>
 
       <!-- INICIO -->
       <section class="view" id="v-home">
-        <div class="top"><span class="tenant">E</span><div class="top-t">Tu empresa<small>Tu edificio</small></div><button class="icon-btn" aria-label="Avisos" style="margin-left:auto"><svg class="i"><use href="#bell"/></svg><span class="badge"></span></button><span class="avatar" style="margin-left:0" aria-label="Tu cuenta"><svg class="i" style="width:18px;height:18px"><use href="#home"/></svg></span></div>
-        <h2 class="title">Hola, <em>buen día</em></h2>
-        <p class="sub">Tenés dos tareas esta semana y una garantía por vencer.</p>
-        <div class="home-card"><img src="assets/img/living-familia.webp" alt=""><span class="chip"><svg class="i" style="width:13px;height:13px"><use href="#check"/></svg>Entregada</span><div class="cap"><b>Tu vivienda</b><span>Manual activo desde la entrega</span></div></div>
+        <div class="top"><span class="tenant">E</span><div class="top-t">Tu empresa<small>Torre Ochava · Apto 302</small></div><button class="icon-btn" aria-label="Avisos" data-sheet="avisos" style="margin-left:auto"><svg class="i"><use href="#bell"/></svg><span class="badge"></span></button><span class="avatar" style="margin-left:0" aria-label="Tu cuenta"><svg class="i" style="width:18px;height:18px"><use href="#user"/></svg></span></div>
+        <h2 class="title">Hola, <em>María</em></h2>
+        <p class="sub">Tu reclamo del balcón tiene visita el jueves, y una garantía vence pronto.</p>
+        <div class="home-card"><img src="assets/img/living-familia.webp" alt=""><span class="chip"><svg class="i" style="width:13px;height:13px"><use href="#check"/></svg>Entregada el 12 nov</span><div class="cap"><b>Tu vivienda</b><span>Acta firmada · manual activo</span></div></div>
+        <button class="card" data-go="reclamo"><span class="ico" style="background:var(--brand);color:var(--paper)"><svg class="i"><use href="#tool"/></svg></span><div class="t"><b>Agua acumulada en el balcón</b><small>En garantía · visita jue 20, de 9 a 12 h</small></div><svg class="i chev"><use href="#chev"/></svg></button>
         <button class="alert" data-go="garantias" style="width:100%;text-align:left"><span class="ico"><svg class="i"><use href="#shield"/></svg></span><div style="flex:1"><b>Aire acondicionado split</b><span>La garantía vence en 45 días. Si algo no anda bien, reportalo antes.</span></div><svg class="i chev"><use href="#chev"/></svg></button>
         <div class="sec"><h3>Esta semana</h3><button data-go="agenda">Ver agenda</button></div>
         <button class="card" data-go="agenda"><span class="ico"><svg class="i"><use href="#drop"/></svg></span><div class="t"><b>Revisar sifones de la cocina</b><small>Jueves · 10 min · Vos</small></div><svg class="i chev"><use href="#chev"/></svg></button>
         <button class="card" data-go="agenda"><span class="ico"><svg class="i"><use href="#zap"/></svg></span><div class="t"><b>Probar el interruptor diferencial</b><small>Sábado · 1 min · Vos</small></div><svg class="i chev"><use href="#chev"/></svg></button>
         <div class="sec"><h3>Accesos</h3></div>
         <div class="quick">
-          <button><svg class="i"><use href="#plan"/></svg>Planos</button>
-          <button><svg class="i"><use href="#tool"/></svg>Proveedores</button>
-          <button><svg class="i"><use href="#building"/></svg>Edificio</button>
+          <button data-go="docs"><svg class="i"><use href="#plan"/></svg>Documentos</button>
+          <button data-go="contactos"><svg class="i"><use href="#phone"/></svg>Contactos</button>
+          <button data-go="acta"><svg class="i"><use href="#sign"/></svg>Acta</button>
           <button data-sheet="emergencia"><svg class="i"><use href="#alert"/></svg>Emergencias</button>
         </div>
         <div class="sec"><h3>Consejo de la semana</h3></div>
         <div class="tip"><p class="label">Humedad y condensación</p><p>Ventilá 30 a 60 minutos en las horas de sol, y el dormitorio a la mañana. Así se evitan la condensación y los hongos.</p></div>
+        <div class="demo-cta"><p class="label">Esto es una demo de Habitá</p><p>¿Te gustaría que tus propietarios reciban esto?</p><a href="index.html#demo" data-wa="app-movil"><svg class="i"><use href="#wa"/></svg>Verlo en mi próxima obra</a></div>
+      </section>
+
+      <!-- ACTA DE ENTREGA -->
+      <section class="view" id="v-acta">
+        <button class="back" data-go="home"><svg class="i"><use href="#back"/></svg>Inicio</button>
+        <h2 class="title">Acta de <em>entrega</em></h2>
+        <p class="sub">Apto 302 · Torre Ochava. Recorré la vivienda con la empresa y marcá cada ambiente.</p>
+        <div class="steps-bar" aria-hidden="true"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></div>
+        <div id="acta-list"></div>
+        <label>Tu firma</label>
+        <div class="sigpad" id="sigpad"><canvas aria-label="Firmá con el dedo"></canvas><span>Firmá acá con el dedo</span></div>
+        <div class="row-btns"><span>12 nov 2026 · María Rodríguez</span><button id="sig-clear">Borrar</button></div>
+        <button class="primary brand" id="sign-btn"><svg class="i"><use href="#sign"/></svg>Firmar conformidad</button>
+        <p class="fine">Las observaciones quedan registradas como reclamos en garantía, con su foto.</p>
+      </section>
+
+      <!-- ACTA FIRMADA -->
+      <section class="view" id="v-acta-ok">
+        <div class="ok">
+          <svg class="ok-ring" viewBox="0 0 92 92"><circle cx="46" cy="46" r="44"/><path d="M29 47.5 41 59l23-26"/></svg>
+          <h2>Acta firmada</h2>
+          <p>Te enviamos una copia por email y quedó guardada en tus documentos. La observación del baño ya está asignada a Vidriería Centro.</p>
+          <div class="tl">
+            <div class="done"><b>Vivienda recibida</b><small>12 nov 2026, 10:42</small></div>
+            <div class="done"><b>Manual activado</b><small>Garantías, mantenimiento y contactos</small></div>
+            <div class="now"><b>1 observación en curso</b><small>Sellador de la mampara · en garantía</small></div>
+          </div>
+          <button class="primary" data-go="home">Ir a mi vivienda</button>
+        </div>
+      </section>
+
+      <!-- SEGUIMIENTO DEL RECLAMO -->
+      <section class="view" id="v-reclamo">
+        <button class="back" data-go="reportes"><svg class="i"><use href="#back"/></svg>Reportes</button>
+        <div class="hero-img" style="height:170px"><img src="assets/img/balcon-atardecer.webp" alt="Foto del reclamo: agua en el balcón" style="object-position:30% 78%"></div>
+        <h2 class="title" style="font-size:27px">Agua acumulada en el balcón</h2>
+        <p class="sub">Apto 302 · Balcón · enviado el 12 nov, 9:41</p>
+        <div class="gcard"><span class="ico"><svg class="i"><use href="#shield"/></svg></span><div><b>En garantía</b><span>Impermeabilización del balcón, garantía vigente hasta marzo de 2036. Responde Impermeabilizaciones del Este.</span></div></div>
+        <div class="tl full">
+          <div class="done"><b>Recibido por la empresa</b><small>12 nov, 9:41 · con foto y ubicación</small></div>
+          <div class="done"><b>Clasificado en garantía</b><small>Automático, según la garantía del elemento</small></div>
+          <div class="done"><b>Asignado</b><small>Impermeabilizaciones del Este · 12 nov, 10:05</small></div>
+          <div class="now"><b>Visita técnica</b><small>Pendiente de tu confirmación</small></div>
+          <div><b>Resuelto</b><small>Vas a poder calificar la atención</small></div>
+        </div>
+        <div class="visit" id="visit"><b>Jueves 20 nov, de 9 a 12 h</b><small>Propuesta por Impermeabilizaciones del Este</small><div class="two"><button id="visit-ok">Confirmar visita</button><button>Cambiar horario</button></div><p class="done-msg"><svg class="i"><use href="#check"/></svg>Visita confirmada. Te avisamos el día anterior.</p></div>
+        <div class="sec"><h3>Al terminar</h3></div>
+        <p class="sub" style="margin-bottom:0">¿Cómo te atendieron? La empresa ve cada calificación.</p>
+        <div class="stars" id="stars"><button aria-label="1 estrella"><svg class="i"><use href="#star"/></svg></button><button aria-label="2 estrellas"><svg class="i"><use href="#star"/></svg></button><button aria-label="3 estrellas"><svg class="i"><use href="#star"/></svg></button><button aria-label="4 estrellas"><svg class="i"><use href="#star"/></svg></button><button aria-label="5 estrellas"><svg class="i"><use href="#star"/></svg></button></div>
+      </section>
+
+      <!-- DOCUMENTOS -->
+      <section class="view" id="v-docs">
+        <button class="back" data-go="home"><svg class="i"><use href="#back"/></svg>Inicio</button>
+        <h2 class="title">Tus <em>documentos</em></h2>
+        <p class="sub">Todo lo que la empresa entregó de tu vivienda, siempre a mano.</p>
+        <div class="card"><span class="ico"><svg class="i"><use href="#sign"/></svg></span><div class="t"><b>Acta de entrega firmada</b><small>12 nov 2026 · 1 observación</small></div><span class="chip">PDF</span></div>
+        <div class="card"><span class="ico"><svg class="i"><use href="#plan"/></svg></span><div class="t"><b>Planos de la unidad</b><small>Planta, eléctrico, sanitario</small></div><span class="chip plain">3 PDF</span></div>
+        <div class="card"><span class="ico"><svg class="i"><use href="#file"/></svg></span><div class="t"><b>Memoria descriptiva</b><small>Materiales y terminaciones</small></div><span class="chip plain">PDF</span></div>
+        <div class="card"><span class="ico"><svg class="i"><use href="#tool"/></svg></span><div class="t"><b>Fichas técnicas de equipos</b><small>Aire, termotanque, grifería, aberturas</small></div><span class="chip plain">8 PDF</span></div>
+        <div class="card"><span class="ico"><svg class="i"><use href="#shield"/></svg></span><div class="t"><b>Certificados de garantía</b><small>9 vigentes</small></div><span class="chip plain">9 PDF</span></div>
+        <div class="card"><span class="ico"><svg class="i"><use href="#book"/></svg></span><div class="t"><b>Reglamento de copropiedad</b><small>Bienes comunes y de uso exclusivo</small></div><span class="chip plain">PDF</span></div>
+      </section>
+
+      <!-- CONTACTOS -->
+      <section class="view" id="v-contactos">
+        <button class="back" data-go="home"><svg class="i"><use href="#back"/></svg>Inicio</button>
+        <h2 class="title">Tus <em>contactos</em></h2>
+        <p class="sub">A quién recurrir según el problema. Si está en garantía, reportalo desde la app y llega directo al responsable.</p>
+        <div class="card contact"><span class="ico" style="background:var(--brand);color:var(--paper)"><svg class="i"><use href="#user"/></svg></span><div class="t"><b>Posventa de tu empresa</b><small>Lunes a viernes, de 9 a 18 h</small></div><div class="acts"><a href="#" aria-label="WhatsApp"><svg class="i"><use href="#wa"/></svg></a><a href="#" aria-label="Llamar"><svg class="i"><use href="#phone"/></svg></a></div></div>
+        <div class="card contact"><span class="ico"><svg class="i"><use href="#building"/></svg></span><div class="t"><b>Administración del edificio</b><small>Bienes comunes y azotea</small></div><div class="acts"><a href="#" aria-label="Llamar"><svg class="i"><use href="#phone"/></svg></a></div></div>
+        <p class="month">Responsables por rubro</p>
+        <div class="card contact"><span class="ico"><svg class="i"><use href="#wind"/></svg></span><div class="t"><b>Climatización Sur</b><small>Aire acondicionado · garantía hasta dic 2026</small></div><div class="acts"><a href="#" aria-label="Llamar"><svg class="i"><use href="#phone"/></svg></a></div></div>
+        <div class="card contact"><span class="ico"><svg class="i"><use href="#drop"/></svg></span><div class="t"><b>Impermeabilizaciones del Este</b><small>Azotea y balcones · garantía hasta 2036</small></div><div class="acts"><a href="#" aria-label="Llamar"><svg class="i"><use href="#phone"/></svg></a></div></div>
+        <div class="card contact"><span class="ico"><svg class="i"><use href="#plan"/></svg></span><div class="t"><b>Aberturas del Sur</b><small>Aberturas de aluminio · garantía hasta 2031</small></div><div class="acts"><a href="#" aria-label="Llamar"><svg class="i"><use href="#phone"/></svg></a></div></div>
+        <p class="month">Fuera de garantía</p>
+        <div class="card contact"><span class="ico"><svg class="i"><use href="#tool"/></svg></span><div class="t"><b>Técnico recomendado</b><small>Mantenimiento, arreglos y mejoras</small></div><div class="acts"><a href="#" aria-label="Pedir presupuesto"><svg class="i"><use href="#send"/></svg></a></div></div>
       </section>
 
       <!-- MANUAL -->
@@ -391,7 +551,10 @@
         <p class="sub">Cada problema que reportás llega a la empresa y podés seguir su estado.</p>
         <button class="primary" data-go="reportar" style="margin:0 0 18px"><svg class="i"><use href="#camera"/></svg>Nuevo reporte</button>
         <p class="month">En curso</p>
-        <button class="card" data-go="ok"><span class="ico"><svg class="i"><use href="#drop"/></svg></span><div class="t"><b>Agua acumulada en el balcón</b><small>Enviado hoy · Balcón</small></div><span class="chip warn">En curso</span></button>
+        <button class="card" data-go="reclamo"><span class="ico"><svg class="i"><use href="#drop"/></svg></span><div class="t"><b>Agua acumulada en el balcón</b><small>En garantía · Impermeabilizaciones del Este</small></div><span class="chip warn">Visita jue 20</span></button>
+        <button class="card" data-go="reclamo"><span class="ico"><svg class="i"><use href="#sign"/></svg></span><div class="t"><b>Sellador de la mampara</b><small>Del acta de entrega · Vidriería Centro</small></div><span class="chip warn">Asignado</span></button>
+        <p class="month">Fuera de garantía</p>
+        <div class="card"><span class="ico"><svg class="i"><use href="#tool"/></svg></span><div class="t"><b>Cambiar el cuerito de la ducha</b><small>Mantenimiento · te recomendamos un técnico</small></div><span class="chip plain">Derivado</span></div>
         <p class="month">Resueltos</p>
         <div class="card"><span class="ico"><svg class="i"><use href="#tool"/></svg></span><div class="t"><b>Puerta del placard descuadrada</b><small>Resuelto en 6 días · Dormitorio 1</small></div><span class="chip">Resuelto</span></div>
         <div class="card"><span class="ico"><svg class="i"><use href="#drop"/></svg></span><div class="t"><b>Pérdida en la canilla de la cocina</b><small>Resuelto en 3 días · Cocina</small></div><span class="chip">Resuelto</span></div>
@@ -422,10 +585,11 @@
           <p>La empresa lo recibió con tu vivienda, el ambiente y la foto. Te avisamos cuando haya novedades.</p>
           <div class="tl">
             <div class="done"><b>Recibido</b><small>Hoy, 9:41</small></div>
-            <div class="now"><b>En curso</b><small>Asignado a posventa</small></div>
+            <div class="done"><b>En garantía</b><small>Impermeabilización del balcón, hasta 2036</small></div>
+            <div class="now"><b>Asignado</b><small>Impermeabilizaciones del Este te va a proponer un horario</small></div>
             <div><b>Resuelto</b><small>Pendiente</small></div>
           </div>
-          <button class="primary" data-go="reportes">Ver mis reportes</button>
+          <button class="primary" data-go="reclamo">Ver el seguimiento</button>
         </div>
       </section>
     </div>
@@ -440,7 +604,18 @@
     </nav>
 
     <div class="scrim" data-close></div>
-    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-t">
+    <div class="sheet" data-sheet-id="avisos" role="dialog" aria-modal="true" aria-labelledby="sheet-av" hidden>
+      <div class="grab"></div><button class="sheet-close" data-close aria-label="Cerrar"><svg class="i"><use href="#back"/></svg></button>
+      <h3 id="sheet-av">Avisos</h3>
+      <p class="sub" style="margin-bottom:0">Lo último de tu vivienda.</p>
+      <div class="sheet-list">
+        <button class="unread" data-go="reclamo"><span class="ico"><svg class="i"><use href="#calendar"/></svg></span><p><b>Visita propuesta para el jueves 20</b><span>Impermeabilizaciones del Este · hace 1 h</span></p></button>
+        <button class="unread" data-go="reclamo"><span class="ico"><svg class="i"><use href="#shield"/></svg></span><p><b>Tu reclamo está en garantía</b><span>Agua acumulada en el balcón · hoy</span></p></button>
+        <button data-go="garantias"><span class="ico"><svg class="i"><use href="#clock"/></svg></span><p><b>La garantía del aire vence en 45 días</b><span>Si algo no anda bien, reportalo antes</span></p></button>
+        <button data-go="agenda"><span class="ico"><svg class="i"><use href="#drop"/></svg></span><p><b>Esta semana: revisar sifones</b><span>Cocina · 10 minutos</span></p></button>
+      </div>
+    </div>
+    <div class="sheet" data-sheet-id="emergencia" role="dialog" aria-modal="true" aria-labelledby="sheet-t" hidden>
       <div class="grab"></div><button class="sheet-close" data-close aria-label="Cerrar"><svg class="i"><use href="#back"/></svg></button>
       <h3 id="sheet-t">En caso de emergencia</h3>
       <p class="sub" style="margin-bottom:0">Actuá rápido pero con calma.</p>
@@ -556,7 +731,73 @@
     requestAnimationFrame(() => placePill(seg, true));
   }
 
-  const tabFor = { ambiente: 'manual', ok: 'reportes', reportar: 'reportes' };
+  /* Acta de entrega: ambiente por ambiente */
+  const ACTA = [
+    ['Living-comedor'], ['Cocina'],
+    ['Baño', 'Falta sellador en la base de la mampara.', 'assets/img/dormitorio-2.webp'],
+    ['Dormitorio 1'], ['Balcón'], ['Llaves y manuales', null, null, '3 juegos de llaves'],
+  ];
+  document.getElementById('acta-list').innerHTML = ACTA.map(([n, obs, img, note]) => `
+    <div class="ck${obs ? ' has-obs' : ''}">
+      <div class="ck-h"><b>${n}${note ? `<small style="display:block;font-size:11.5px;color:var(--ink-3);font-weight:400">${note}</small>` : ''}</b>
+        <div class="ck-seg"><button class="${obs ? '' : 'on'}" data-ck="ok">Bien</button><button class="obs${obs ? ' on' : ''}" data-ck="obs">Observación</button></div></div>
+      <div class="ck-obs">${img ? `<img src="${img}" alt="">` : `<span class="add">${ic('camera')}</span>`}<span>${obs || 'Contá qué viste y sacá una foto.'}</span></div>
+    </div>`).join('');
+
+  /* Firma en pantalla */
+  const pad = document.getElementById('sigpad'), cv = pad.querySelector('canvas'), cx = cv.getContext('2d');
+  let drawing = false, last = null;
+  function sizePad() {
+    const r = cv.getBoundingClientRect(); if (!r.width) return;
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    cv.width = r.width * dpr; cv.height = r.height * dpr;
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cx.lineWidth = 2.4; cx.lineCap = 'round'; cx.lineJoin = 'round';
+    cx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#1E2321';
+    pad.classList.remove('signed');
+  }
+  const pt = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  cv.addEventListener('pointerdown', e => { drawing = true; last = pt(e); cv.setPointerCapture(e.pointerId); pad.classList.add('signed'); });
+  cv.addEventListener('pointermove', e => {
+    if (!drawing) return;
+    const p = pt(e);
+    cx.beginPath(); cx.moveTo(last[0], last[1]); cx.quadraticCurveTo(last[0], last[1], (last[0] + p[0]) / 2, (last[1] + p[1]) / 2); cx.lineTo(p[0], p[1]); cx.stroke();
+    last = p;
+  });
+  ['pointerup', 'pointercancel'].forEach(ev => cv.addEventListener(ev, () => (drawing = false)));
+  document.getElementById('sig-clear').addEventListener('click', sizePad);
+  // Si el propietario no firmó, la demo firma sola para mostrar el resultado
+  function autoSign() {
+    if (pad.classList.contains('signed')) return;
+    const r = cv.getBoundingClientRect(), w = r.width, h = r.height;
+    const pts = []; for (let t = 0; t <= 1; t += 0.01) pts.push([w * (0.12 + t * 0.6), h * (0.52 - Math.sin(t * 18) * 0.13 * (1 - t * 0.4) - t * 0.08)]);
+    pad.classList.add('signed');
+    let i = 1;
+    const step = () => { for (let k = 0; k < 4 && i < pts.length; k++, i++) { cx.beginPath(); cx.moveTo(...pts[i - 1]); cx.lineTo(...pts[i]); cx.stroke(); } if (i < pts.length) requestAnimationFrame(step); };
+    step();
+  }
+
+  document.getElementById('sign-btn').addEventListener('click', () => {
+    const wasSigned = pad.classList.contains('signed');
+    autoSign();
+    setTimeout(() => go('acta-ok'), wasSigned ? 150 : 900);
+  });
+
+  document.getElementById('visit-ok').addEventListener('click', () => {
+    const v = document.getElementById('visit'); v.classList.add('ok');
+    const now = document.querySelector('#v-reclamo .tl .now');
+    if (now) { now.classList.replace('now', 'done'); now.querySelector('small').textContent = 'Confirmada · jue 20, de 9 a 12 h'; }
+    if (motionOn) M.animate(v.querySelector('.done-msg'), { opacity: [0, 1], y: [6, 0] }, { duration: 0.4, ease: EASE });
+    H.track('app-confirmar-visita');
+  });
+  const stars = [...document.querySelectorAll('#stars button')];
+  stars.forEach((s, i) => s.addEventListener('click', () => {
+    stars.forEach((x, j) => x.classList.toggle('on', j <= i));
+    if (motionOn) M.animate(stars.slice(0, i + 1), { scale: [0.7, 1] }, { type: 'spring', bounce: 0.5, visualDuration: 0.3, delay: M.stagger(0.04) });
+  }));
+
+  const H = window.Habita || { track() {} };
+  const tabFor = { ambiente: 'manual', ok: 'reportes', reportar: 'reportes', reclamo: 'reportes', acta: 'home', 'acta-ok': 'home', docs: 'home', contactos: 'home' };
   const tabbar = document.querySelector('.tabbar');
   const tInd = tabbar.querySelector('.t-ind');
   let currentView = null;
@@ -579,7 +820,9 @@
     next.scrollTop = 0;
     const t = tabFor[v] || v;
     tabbar.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
-    tabbar.classList.toggle('hide', v === 'login');
+    tabbar.classList.toggle('hide', v === 'login' || v === 'acta');
+    if (prev) H.track('app-' + v);
+    if (v === 'acta') requestAnimationFrame(sizePad);
     document.querySelectorAll('.jump button').forEach(b => b.classList.toggle('on', b.dataset.go === v || (v === 'ambiente' && b.dataset.go === 'manual')));
     moveTabInd(!prev);
     next.querySelectorAll('[data-seg]').forEach(s => placePill(s, true));
@@ -587,7 +830,7 @@
     const kids = [...next.children].slice(0, 7);
     M.animate(kids, { opacity: [0, 1], y: [14, 0] }, { duration: 0.5, ease: EASE, delay: M.stagger(0.04) });
     if (v === 'garantias') M.animate(next.querySelectorAll('.bar i'), { scaleX: [0, 1] }, { duration: 0.9, ease: EASE, delay: M.stagger(0.07, { startDelay: 0.2 }) });
-    if (v === 'ok') {
+    if (v === 'ok' || v === 'acta-ok') {
       const c = next.querySelector('.ok-ring circle'), p = next.querySelector('.ok-ring path');
       [c, p].forEach(el => { const l = el.getTotalLength(); el.style.strokeDasharray = l; el.style.strokeDashoffset = l; });
       M.animate(c, { strokeDashoffset: 0 }, { duration: 0.7, ease: EASE });
@@ -605,23 +848,42 @@
     else { pill.style.width = v.width + 'px'; pill.style.transform = `translateX(${v.x}px)`; }
   }
 
-  const scrim = document.querySelector('.scrim'), sheet = document.querySelector('.sheet');
-  function sheetOpen(open) {
+  const scrim = document.querySelector('.scrim');
+  let sheet = null;
+  function sheetOpen(open, id) {
+    if (open) {
+      if (sheet && sheet.dataset.sheetId !== id) { sheet.hidden = true; sheet.style.transform = 'translateY(105%)'; }
+      sheet = document.querySelector(`.sheet[data-sheet-id="${id}"]`);
+      if (!sheet) return;
+      sheet.hidden = false;
+      H.track('app-hoja-' + id);
+    }
+    if (!sheet) return;
+    const s = sheet;
     scrim.style.pointerEvents = open ? 'auto' : 'none';
     if (motionOn) {
       M.animate(scrim, { opacity: open ? 1 : 0 }, { duration: 0.3 });
-      M.animate(sheet, { y: open ? '0%' : '105%' }, open ? { type: 'spring', bounce: 0.12, visualDuration: 0.45 } : { duration: 0.25, ease: 'easeIn' });
-      if (open) M.animate(sheet.querySelectorAll('.em div'), { opacity: [0, 1], y: [12, 0] }, { duration: 0.4, ease: EASE, delay: M.stagger(0.05, { startDelay: 0.15 }) });
-    } else { scrim.style.opacity = open ? 1 : 0; sheet.style.transform = open ? 'none' : 'translateY(105%)'; }
+      M.animate(s, { y: open ? ['105%', '0%'] : '105%' }, open ? { type: 'spring', bounce: 0.12, visualDuration: 0.45 } : { duration: 0.25, ease: 'easeIn' });
+      if (open) M.animate(s.querySelectorAll('.em div, .sheet-list button'), { opacity: [0, 1], y: [12, 0] }, { duration: 0.4, ease: EASE, delay: M.stagger(0.05, { startDelay: 0.15 }) });
+    } else { scrim.style.opacity = open ? 1 : 0; s.style.transform = open ? 'none' : 'translateY(105%)'; }
   }
 
   document.addEventListener('click', e => {
     const t = e.target;
     const goBtn = t.closest('[data-go]');
-    if (goBtn) { e.preventDefault(); go(goBtn.dataset.go); return; }
+    if (goBtn) { e.preventDefault(); if (goBtn.closest('.sheet')) sheetOpen(false); go(goBtn.dataset.go); return; }
     const amb = t.closest('[data-amb]');
     if (amb) { openAmb(amb.dataset.amb); return; }
-    if (t.closest('[data-sheet]')) { sheetOpen(true); return; }
+    const sh = t.closest('[data-sheet]');
+    if (sh) { sheetOpen(true, sh.dataset.sheet); return; }
+    const ck = t.closest('[data-ck]');
+    if (ck) {
+      const row = ck.closest('.ck');
+      row.querySelectorAll('[data-ck]').forEach(b => b.classList.toggle('on', b === ck));
+      row.classList.toggle('has-obs', ck.dataset.ck === 'obs');
+      if (motionOn && ck.dataset.ck === 'obs') M.animate(row.querySelector('.ck-obs'), { opacity: [0, 1], y: [-4, 0] }, { duration: 0.3, ease: EASE });
+      return;
+    }
     if (t.closest('[data-close]')) { e.preventDefault(); sheetOpen(false); return; }
     const check = t.closest('.task .check');
     if (check) {
